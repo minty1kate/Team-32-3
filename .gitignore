@@ -1,4 +1,53 @@
-Library/
-Temp/
-Logs/
-Build/
+# ===== UNITY GENERATED FOLDERS =====
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# ===== UNITY GENERATED FILES =====
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.suo.meta
+*.booproj.meta
+*.sln.meta
+*.userprefs
+*.unitypackage
+
+# ===== PACKAGE MANAGER =====
+# Кэши пакетов восстанавливаются автоматически
+/[Pp]ackages/[Pp]ackage[Cc]ache/
+/[Pp]ackages/[Pp]ackage[Cc]ache.meta
+/[Pp]ackages/[Mm]anifest.[Jj][Ss][Oo][Nn].meta
+
+# ===== IDE & EDITORS =====
+.vs/
+.vscode/
+*.csproj
+*.sln
+*.sln.meta
+*.csproj.meta
+*.user
+*.user.meta
+*.orig
+*.bak
+*.swp
+*.tmp
+*.log
+*.pidb
+*.booproj
+
+# ===== OS & MISC =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.cache

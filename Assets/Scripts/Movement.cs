@@ -2,29 +2,43 @@
 
 public class Movement : MonoBehaviour
 {
-    private float acceleration = 30;
-    private Rigidbody2D rigidBodyComponent;
-    private GameObject exit;
-    
+    [SerializeField] private float speed = 120f;
+    [SerializeField] private float sprintMultiplier = 20f;
+    private Rigidbody2D _rb;
+    private SpriteRenderer _sr;
+
     void Start()
     {
-        rigidBodyComponent = GetComponent<Rigidbody2D>();
-        exit = GameObject.Find("Exit");
+        _rb = GetComponent<Rigidbody2D>();
+        _sr = GetComponent<SpriteRenderer>();
     }
-    
+
     void Update()
     {
-        var w = Input.GetKey(KeyCode.W) ? 1 : 0;
-        var a  = Input.GetKey(KeyCode.A) ? 1 : 0;
-        var s = Input.GetKey(KeyCode.S) ? -1 : 0;
-        var d = Input.GetKey(KeyCode.D) ? -1 : 0;
-        var movement = new Vector2(-(a + d), w + s);
+        var x = 0f;
+        var y = 0f;
+
+        if (Input.GetKey(KeyCode.W)) y += 1;
+        if (Input.GetKey(KeyCode.S)) y -= 1;
+        if (Input.GetKey(KeyCode.A)) x -= 1;
+        if (Input.GetKey(KeyCode.D)) x += 1;
+
+        var movement = new Vector2(x, y).normalized;
+        var currentSpeed = speed;
         
-        rigidBodyComponent.linearVelocity = movement * acceleration;
-        if (movement.magnitude > Mathf.Epsilon)
-        {
-            var angle = new Vector3(0 ,0, movement.magnitude);
-            transform.rotation = Quaternion.Euler(angle);
-        }
+        if (Input.GetKey(KeyCode.LeftShift)) currentSpeed *= sprintMultiplier;
+
+        _rb.linearVelocity = movement * currentSpeed;
+        
+        if (x<0)
+            _sr.flipX = true;
+        else if (x > 0)
+            _sr.flipX = false;
+
+        // if (movement != Vector2.zero)
+        // {
+        //     var angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg;
+        //     transform.rotation = Quaternion.Euler(0, 0, angle);
+        // }
     }
 }
