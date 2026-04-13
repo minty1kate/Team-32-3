@@ -4,7 +4,7 @@ public class CameraBehaviour : MonoBehaviour
 {
     void Start()
     {
-        player = GameObject.Find("character_0");
+        player = GameObject.Find("Player");
     }
 
     void Update()
