@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: aca9513ec968efa419a6706eb7494f5d
+guid: f3050df9af7be114bb516f591434a822
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7152930139536384079
-    second: character_0
+      213: -8535570100213469098
+    second: Brother2.0_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: character_0
+      name: Brother2.0_0
       rect:
         serializedVersion: 2
-        x: 74
-        y: 73
-        width: 537
-        height: 1210
+        x: 140
+        y: 31
+        width: 614
+        height: 1548
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f4060466010544360800000000000000
-      internalID: 7152930139536384079
+      spriteID: 650b45d97309b8980800000000000000
+      internalID: -8535570100213469098
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      character_0: 7152930139536384079
+      Brother2.0_0: -8535570100213469098
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
