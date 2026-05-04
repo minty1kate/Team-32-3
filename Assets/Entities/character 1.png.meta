@@ -1,10 +1,25 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:Assets/Entities/Brother2.0.png.meta
+guid: f3050df9af7be114bb516f591434a822
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8535570100213469098
+    second: Brother2.0_0
+========
+>>>>>>> спальня(1_локация)
 guid: 0b77c58da05a9ab49936a71ba430fd0e
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -320556977450912249
     second: character 1_0
+<<<<<<< HEAD
+=======
+>>>>>>>> спальня(1_локация):Assets/Entities/character 1.png.meta
+>>>>>>> спальня(1_локация)
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,6 +115,18 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:Assets/Entities/Brother2.0.png.meta
+      name: Brother2.0_0
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 31
+        width: 614
+        height: 1548
+========
+>>>>>>> спальня(1_локация)
       name: character 1_0
       rect:
         serializedVersion: 2
@@ -107,6 +134,10 @@ TextureImporter:
         y: 4
         width: 535
         height: 1210
+<<<<<<< HEAD
+=======
+>>>>>>>> спальня(1_локация):Assets/Entities/character 1.png.meta
+>>>>>>> спальня(1_локация)
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +146,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<< HEAD
       spriteID: 706f3cc90272d8bf0800000000000000
       internalID: -320556977450912249
+=======
+<<<<<<<< HEAD:Assets/Entities/Brother2.0.png.meta
+      spriteID: 650b45d97309b8980800000000000000
+      internalID: -8535570100213469098
+========
+      spriteID: 706f3cc90272d8bf0800000000000000
+      internalID: -320556977450912249
+>>>>>>>> спальня(1_локация):Assets/Entities/character 1.png.meta
+>>>>>>> спальня(1_локация)
       vertices: []
       indices: 
       edges: []
@@ -135,7 +176,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+<<<<<<< HEAD
       character 1_0: -320556977450912249
+=======
+<<<<<<<< HEAD:Assets/Entities/Brother2.0.png.meta
+      Brother2.0_0: -8535570100213469098
+========
+      character 1_0: -320556977450912249
+>>>>>>>> спальня(1_локация):Assets/Entities/character 1.png.meta
+>>>>>>> спальня(1_локация)
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
