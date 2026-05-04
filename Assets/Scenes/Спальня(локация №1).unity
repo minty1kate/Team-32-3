@@ -414,6 +414,10 @@ PrefabInstance:
       propertyPath: speed
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4731530846769521447, guid: 9c52b3ed36863e74ba2267e4f961b788, type: 3}
+      propertyPath: sideSprite
+      value: 
+      objectReference: {fileID: 7152930139536384079, guid: 413223666d4217144aa0b046ac36f490, type: 3}
     - target: {fileID: 5911651263995290302, guid: 9c52b3ed36863e74ba2267e4f961b788, type: 3}
       propertyPath: m_SortingOrder
       value: 5
@@ -444,7 +448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WakeUp
   lyingSprite: {fileID: 2886982266153571394, guid: b0c4694dd5d47fc4d87afc2868068da2, type: 3}
-  standingSprite: {fileID: -320556977450912249, guid: 0b77c58da05a9ab49936a71ba430fd0e, type: 3}
+  standingSprite: {fileID: 7152930139536384079, guid: 413223666d4217144aa0b046ac36f490, type: 3}
   dialogueManager: {fileID: 1622925642}
 --- !u!1 &690046715
 GameObject:

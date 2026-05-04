@@ -84,12 +84,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -320556977450912249, guid: 0b77c58da05a9ab49936a71ba430fd0e, type: 3}
+  m_Sprite: {fileID: 7152930139536384079, guid: 413223666d4217144aa0b046ac36f490, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.37, y: 12.1}
+  m_Size: {x: 5.35, y: 12.1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -160,7 +160,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 5.35, y: 12.1}
-    newSize: {x: 5.37, y: 12.1}
+    newSize: {x: 5.35, y: 12.1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -181,5 +181,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player_Movement
   speed: 5
   sprintMultiplier: 2
-  sideSprite: {fileID: -320556977450912249, guid: 0b77c58da05a9ab49936a71ba430fd0e, type: 3}
+  sideSprite: {fileID: 7152930139536384079, guid: 413223666d4217144aa0b046ac36f490, type: 3}
   backSprite: {fileID: 2565896155084494068, guid: b8ab3666dd2cb4444b950bdcca62939d, type: 3}
