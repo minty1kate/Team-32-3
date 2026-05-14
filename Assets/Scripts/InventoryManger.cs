@@ -61,4 +61,7 @@ public class InventoryManager : MonoBehaviour
             iconDisplay.color = new Color(0, 0, 0, 0); // Прозрачная иконка
         }
     }
+
+    // Добавь это внутрь класса InventoryManager
+    public int ItemsCount => items.Count;
 }
