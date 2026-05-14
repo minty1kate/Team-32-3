@@ -9,24 +9,35 @@ namespace DefaultNamespace
         public float fleeSpeed = 250f;
         public Transform[] patrolPoints;
         
-        private int currentPoint = 0;
-        private bool isFeeling = false;
+        private int currentPoint;
+        private bool isFeeling;
         private Transform escapePoint;
         private SpriteRenderer spriteRenderer;
+        public ParticleSystem _ps; // Перетащи сюда систему частиц в инспекторе
+        private bool isConfused;
 
         void Start()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_ps == null) _ps = GetComponent<ParticleSystem>();
+        }
+        
+        public void StopParticles()
+        {
+            if (_ps != null) 
+            {
+                _ps.Clear();
+                _ps.Stop(); // Новые частицы перестанут появляться
+            }
         }
 
         void Update()
         {
-            if (isFeeling)
-            {
+            if (isFeeling) {
                 MoveTowards(escapePoint.position, fleeSpeed);
-            }
-            else
-            {
+            } else if (isConfused) {
+                spriteRenderer.flipX = (Mathf.PingPong(Time.time * 6, 1) > 0.5f); // Метод для кручения
+            } else {
                 Patrol();
             }
         }
@@ -55,11 +66,24 @@ namespace DefaultNamespace
             {
                 spriteRenderer.flipX = false;
             }
+            if (isFeeling && Vector2.Distance(transform.position, target) < 0.2f)
+            {
+                Destroy(gameObject); // NPC исчезает, дойдя до точки выхода
+            }
+        }
+        
+        public void StartConfused()
+        {
+            isConfused = true;
+            isFeeling = false;
+        
+            StopParticles(); // Отключаем частицы сразу при начале кручения
         }
 
         public void StartFeeling(Transform exit)
         {
             escapePoint = exit;
+            isConfused = false;
             isFeeling = true;
         }
     }
