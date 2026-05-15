@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI; // Добавь это для работы с UI Image
+using UnityEngine.UI;
+using System.Collections; // Обязательно для задержки (IEnumerator)
 
 public class PuzzleManager : MonoBehaviour
 {
@@ -7,17 +8,19 @@ public class PuzzleManager : MonoBehaviour
 
     [Header("Настройки панелей")]
     public GameObject puzzlePanel;
-    public Button closeButton; // Ссылка на кнопку закрытия в UI
+    public Button closeButton;
+    public float finishDelay = 1.5f; // Настройка времени задержки в секундах
 
     [Header("Связи")]
     public DragAndDrop[] allPieces;
     public DialogueManager dialogueManager;
-    public TaskManager taskManager; // Ссылка на менеджер задач
+    public TaskManager taskManager;
+    public InventoryManager inventory;
 
     [Header("Визуал целого зеркала")]
-    public Image puzzleMirrorImage; // Картинка рамы ВНУТРИ пазла
-    public Sprite fixedMirrorSprite; // Спрайт целого зеркала
-    public SpriteRenderer wallMirrorRenderer; // Спрайт рамы НА СТЕНЕ (в комнате)
+    public Image puzzleMirrorImage;
+    public Sprite fixedMirrorSprite;
+    public SpriteRenderer wallMirrorRenderer;
 
     private bool _isFinished = false;
 
@@ -25,7 +28,6 @@ public class PuzzleManager : MonoBehaviour
 
     void Start()
     {
-        // Скрываем кнопку закрытия в начале, чтобы нельзя было выйти раньше времени
         if (closeButton != null) closeButton.gameObject.SetActive(false);
     }
 
@@ -49,54 +51,72 @@ public class PuzzleManager : MonoBehaviour
 
         if (count == 3)
         {
-            FinishPuzzle();
+            // ЗАМЕНЕНО: Теперь вызываем задержку через корутину
+            StartCoroutine(FinishWithDelay());
         }
+    }
+
+    // НОВЫЙ МЕТОД: Корутина для ожидания
+    private IEnumerator FinishWithDelay()
+    {
+        _isFinished = true; // Сразу ставим флаг, чтобы не вызывать победу дважды
+
+        // 1. Сначала меняем спрайт зеркала внутри пазла на целое
+        if (puzzleMirrorImage != null) puzzleMirrorImage.sprite = fixedMirrorSprite;
+
+        // 2. Убираем осколки
+        foreach (var p in allPieces) p.gameObject.SetActive(false);
+        if (inventory != null)
+        {
+            inventory.ClearInventory();
+        }
+        // ЖДЕМ указанное время
+        yield return new WaitForSeconds(finishDelay);
+
+        // Теперь выполняем остальное
+        FinishPuzzle();
     }
 
     void FinishPuzzle()
     {
-        // 1. Сначала меняем спрайт зеркала внутри пазла на целое
-        if (puzzleMirrorImage != null) puzzleMirrorImage.sprite = fixedMirrorSprite;
-
-        // 2. Убираем осколки, чтобы они не мешались (ведь зеркало уже целое)
-        foreach (var p in allPieces) p.gameObject.SetActive(false);
-
-        // 3. Вычеркиваем задачу в списке (Q)
+        // 3. Вычеркиваем задачу
         if (taskManager != null) taskManager.CompleteCurrentTask();
 
-        // 4. Показываем диалоговое окно с красивым текстом
-        // Текст теперь будет ПОВЕРХ зеркала, если ты поменял порядок в Hierarchy
+        // 4. Показываем диалоговое окно
         string text = "Оно целое... ни единой трещины. Но почему я не вижу своего отражения?";
         dialogueManager.ShowMonologue(text, false);
 
-        // 5. Показываем кнопку "Закрыть" прямо в меню пазла
-        // Игрок прочитает текст, полюбуется собранным зеркалом и нажмет её сам
+        // 5. Показываем кнопку "Закрыть"
         if (closeButton != null) closeButton.gameObject.SetActive(true);
     }
 
-    // Метод для кнопки "Закрыть"
-    // Метод для кнопки "Закрыть"
     public void ExitPuzzle()
     {
-        // 1. Закрываем панель пазла
+        // 1. Закрываем само окно пазла
         puzzlePanel.SetActive(false);
 
-        // 2. Закрываем диалоговое окно
-        if (dialogueManager != null)
-        {
-            dialogueManager.CloseDialogue();
-        }
-
-        // 3. Меняем спрайт зеркала на стене
+        // 2. Обновляем зеркало на стене (делаем целым)
         if (wallMirrorRenderer != null && fixedMirrorSprite != null)
         {
             wallMirrorRenderer.sprite = fixedMirrorSprite;
         }
 
-        // ИЗМЕНЕНО: Оставляем мышку видимой для игрока
-        Cursor.visible = true;                       // Мышка видна
-        Cursor.lockState = CursorLockMode.None;      // Мышка свободно двигается
+        // 3. Готовим сюжетные реплики про брата-чтеца
+        string[] storyLines = {
+        "Этот шепот из гостиной... Кажется, это голос брата.",
+        "Он снова сидит с той старой книгой. Чтец... Мне всегда казалось это странным.",
+        "Звучит не как чтение сказки, а как ритуал призыва. Мне кажется, он призывает демонов.",
+        "Нужно немедленно пойти в гостиную. Я должен остановить его, пока не стало поздно."
+    };
 
-        _isFinished = true;
+        // 4. Запускаем диалог через твой метод StartTutorial
+        if (dialogueManager != null)
+        {
+            dialogueManager.StartTutorial(storyLines);
+        }
+
+        // 5. Включаем курсор, чтобы игрок мог нажимать на кнопки "Далее"
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }

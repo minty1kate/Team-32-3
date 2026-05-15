@@ -61,7 +61,24 @@ public class InventoryManager : MonoBehaviour
             iconDisplay.color = new Color(0, 0, 0, 0); // Прозрачная иконка
         }
     }
+    // Метод для удаления предмета
+    public void RemoveItem(Sprite icon)
+    {
+        if (items.Contains(icon))
+        {
+            items.Remove(icon); // Удаляем из списка
 
+            // Если инвентарь открыт — перерисовываем его, если закрыт — он обновится при открытии
+            if (inventoryPanel.activeSelf) RefreshUI();
+        }
+    }
+
+    // Метод для полной очистки (если нужно удалить сразу все осколки)
+    public void ClearInventory()
+    {
+        items.Clear();
+        if (inventoryPanel.activeSelf) RefreshUI();
+    }
     // Добавь это внутрь класса InventoryManager
     public int ItemsCount => items.Count;
 }

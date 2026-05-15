@@ -6,7 +6,7 @@ public class DragAndDrop : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 {
     public RectTransform slotTarget; // Сюда в инспекторе перетащи соответствующий Slot
     public float snapDistance = 50f; // Расстояние «магнита»
-
+    public Sprite pieceIcon;
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
     private Vector3 _startPosition;
