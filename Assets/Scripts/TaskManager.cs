@@ -10,7 +10,8 @@ public class TaskManager : MonoBehaviour
     private List<string> allTasks = new List<string> {
         "Встать с кровати (Клавиша C)",
         "Собрать осколки зеркала (0/3)", // Теперь это индекс 1
-        "Починить зеркало"
+        "Починить зеркало",
+        "Найти брата"
     };
 
     private int currentTaskIndex = 0;

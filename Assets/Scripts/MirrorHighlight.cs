@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class MirrorHighlight : MonoBehaviour
 {
+
     [Header("Настройки подсветки")]
     public SpriteRenderer mirrorRenderer;
     public Color highlightColor = Color.gray;

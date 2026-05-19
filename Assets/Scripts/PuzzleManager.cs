@@ -92,6 +92,7 @@ public class PuzzleManager : MonoBehaviour
 
     public void ExitPuzzle()
     {
+        //if (taskManager != null) taskManager.CompleteCurrentTask();
         // 1. Закрываем само окно пазла
         puzzlePanel.SetActive(false);
 
