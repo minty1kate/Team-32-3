@@ -5993,7 +5993,6 @@ MonoBehaviour:
           m_YAdvance: 0
       m_FeatureLookupFlags: 0
     - m_FirstAdjustmentRecord:
-<<<<<<< HEAD
         m_GlyphIndex: 1021
         m_GlyphValueRecord:
           m_XPlacement: 0
@@ -6084,8 +6083,6 @@ MonoBehaviour:
           m_YAdvance: 0
       m_FeatureLookupFlags: 0
     - m_FirstAdjustmentRecord:
-=======
->>>>>>> katya
         m_GlyphIndex: 1007
         m_GlyphValueRecord:
           m_XPlacement: 0
