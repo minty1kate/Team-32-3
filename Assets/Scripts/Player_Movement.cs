@@ -12,7 +12,7 @@ public class Player_Movement : MonoBehaviour
 
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
-
+    public bool isHidden = false;
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -25,6 +25,12 @@ public class Player_Movement : MonoBehaviour
 
     void Update()
     {
+        if (isHidden)
+        {
+            _rb.linearVelocity = Vector2.zero; // ќстанавливаем игрока
+            return; // ѕропускаем весь остальной код движени€ и смены спрайтов
+        }
+
         float x = 0f;
         float y = 0f;
 
