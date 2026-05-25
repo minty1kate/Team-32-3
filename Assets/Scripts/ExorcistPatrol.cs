@@ -125,6 +125,12 @@ public class ExorcistPatrol : MonoBehaviour
         }
 
         // Окончательно исчезает
+        MazeManager maze = FindObjectOfType<MazeManager>();
+        if (maze != null)
+        {
+            maze.ExorcistIsDead(); // Передаем сигнал, что экзорцист умер
+        }
+
         gameObject.SetActive(false);
     }
 
