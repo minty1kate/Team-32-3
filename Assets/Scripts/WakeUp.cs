@@ -60,7 +60,7 @@ public class WakeUp : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            dialogueManager.ShowMonologue("Голова раскалывается... Почему в доме так темно? (Нажмите C, чтобы встать)", true);
+            dialogueManager.ShowMonologue("Герой\nГолова раскалывается... Почему в доме так темно? (Нажмите C, чтобы встать)", true);
         }
     }
 
@@ -80,12 +80,29 @@ public class WakeUp : MonoBehaviour
         if (standingSprite != null) _sr.sprite = standingSprite;
         if (_moveScript != null) _moveScript.enabled = true;
 
+        // --- БЛОК ОБУЧЕНИЯ ---
         if (dialogueManager != null)
         {
+            // Сначала закрываем старый монолог "Голова раскалывается..."
             dialogueManager.CloseDialogue();
-        }
 
-        Debug.Log("Персонаж проснулся впервые!");
+            // Подготавливаем фразы для обучения
+            string[] tutorialLines = {
+                "Используй AWSD для перемещения по дому.",
+                "Чтобы взаимодействовать с предметом или подобрать его, нажми E.",
+                "Взаимодействовать можно только с теми предметами, которые подсвечены темным цветом.",
+                "Нажми I, чтобы открыть инвентарь.",
+                "Нажми Q, чтобы посмотреть текущие задачи."
+            };
+
+            // Запускаем последовательное обучение
+            dialogueManager.StartTutorial(tutorialLines);
+        }
+        // ----------------------
+        TaskManager tm = FindObjectOfType<TaskManager>();
+        if (tm != null) tm.CompleteCurrentTask();
+        Debug.Log("Персонаж проснулся, обучение запущено!");
         this.enabled = false;
+
     }
 }
