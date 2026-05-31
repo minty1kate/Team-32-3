@@ -111,6 +111,18 @@ public class DialogueManager : MonoBehaviour
         if (nextButton != null) nextButton.gameObject.SetActive(false);
         if (closeButton != null) closeButton.gameObject.SetActive(false);
 
+        // ТЕСТОВЫЙ ЛОГ: Проверяем, ищет ли скрипт менеджер холла
+        HallManager hall = FindFirstObjectByType<HallManager>();
+        if (hall != null)
+        {
+            Debug.Log("HallManager успешно найден! Запускаем последовательность обучения...");
+            hall.StartTutorialSequence();
+        }
+        else
+        {
+            Debug.LogError("ОШИБКА: HallManager не найден на сцене!");
+        }
+
         if (dialoguePanel != null) dialoguePanel.SetActive(false);
     }
 

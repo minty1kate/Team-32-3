@@ -124,11 +124,18 @@ public class ExorcistPatrol : MonoBehaviour
             elapsed += 0.1f;
         }
 
-        // Окончательно исчезает
-        MazeManager maze = FindObjectOfType<MazeManager>();
+        // 1. ПЕРЕКЛЮЧАЕМ ЗАДАЧУ (Победить экзорциста -> Найти ключ от подвала)
+        TaskManager taskManager = FindFirstObjectByType<TaskManager>();
+        if (taskManager != null)
+        {
+            taskManager.CompleteCurrentTask();
+        }
+
+        // 2. РАЗБЛОКИРУЕМ СЕЙФ / КАРТИНУ (Возвращаем старую логику)
+        MazeManager maze = FindFirstObjectByType<MazeManager>();
         if (maze != null)
         {
-            maze.ExorcistIsDead(); // Передаем сигнал, что экзорцист умер
+            maze.ExorcistIsDead(); // Передаем сигнал в мини-игру сейфа
         }
 
         gameObject.SetActive(false);
