@@ -3,176 +3,311 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement; // Обязательно для перезапуска сцены
 
-public class ScaryStaircaseQte : MonoBehaviour
+using UnityEngine;
+using UnityEngine.UI;
+
+using UnityEngine;
+using UnityEngine.UI;
+
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class StaircaseQTE : MonoBehaviour
 {
     [Header("Настройки QTE")]
-    [Tooltip("Сколько раз нужно нажать ЛКМ, чтобы отбиться")]
-    public int targetClicks = 10;
-    
-    [Tooltip("Время на прохождение (в секундах)")]
-    public float timeLimit = 4f;
+    public float TimeLimit = 5.0f; // Время в секундах на уничтожение рук
 
     [Header("Ссылки на объекты")]
-    public GameObject playerObject;       // Объект вашего игрока
-    public GameObject handsGroup;         // Объект с руками (включится при триггере)
-    public GameObject qteTextUI;          // Текст "ЖМИ ЛКМ!" из Canvas
-    public Image bloodOverlay;            // Полупрозрачный красный экран из Canvas
+    public GameObject PlayerObject;
+    public GameObject HandsGroup;  
+    public GameObject QteTextUI;
+    public Image BloodOverlay;     // Объект Red
 
-    [Header("Настройки эффектов")]
-    [Tooltip("Сила бешеной тряски самих рук")]
-    public float handShakeIntensity = 0.1f;
-    [Tooltip("Сила тряски камеры при каждом клике")]
-    public float cameraShakeIntensity = 0.15f;
+    [Header("Настройки хаотичного движения рук")]
+    [SerializeField] private GameObject[] handPrefabs; 
+    [SerializeField] private float handMoveSpeed = 300f; 
 
-    private int _currentClicks = 0;
-    private bool _isActive = false;
-    private bool _isTriggered = false;
+    [Header("Настройки пульсации крови")]
+    [SerializeField] private float pulseSpeed = 4f;       
+    [SerializeField] private float minAlpha = 0.2f;       
+    [SerializeField] private float maxAlpha = 0.6f;       
+
+    [Header("Настройки тряски ВСЕГО ЭКРАНА (Камеры)")]
+    [SerializeField] private float cameraShakeIntensity = 0.15f; // Сила дрожания экрана
+    [SerializeField] private float cameraShakeSpeed = 45f;       // Частота дрожания экрана
+
+    private int activeHandsCount = 0;
+    private float timer = 0f;
+    private bool isQteActive = false;
+
+    private Vector2 minBounds;
+    private Vector2 maxBounds;
     
-    private Vector3 _originalHandsPosition;
-    private Transform _mainCameraTransform;
-    private Vector3 _originalCameraPosition;
+    private bool hasTriggered = false; // Было ли QTE уже запущено ранее?
+    private static bool isPermanentlyPassed = false;
 
-    void Start()
+    // Ссылки для управления камерой
+    private Transform mainCameraTransform;
+    private Vector3 originalCameraPosition;
+
+    private void Start()
     {
-        // Находим главную камеру на сцене для эффекта тряски
+        // Находим основную камеру на сцене при старте
         if (Camera.main != null)
         {
-            _mainCameraTransform = Camera.main.transform;
+            mainCameraTransform = Camera.main.transform;
+        }
+        
+        if (isPermanentlyPassed)
+        {
+            gameObject.SetActive(false); // Полностью отключаем объект триггера лестницы
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Проверяем, что вошел игрок, и QTE еще не срабатывало
-        if (other.CompareTag("Player") && !_isTriggered)
+        if (collision.CompareTag("Player") && !isQteActive && !hasTriggered)
         {
-            _isTriggered = true;
-            StartQTE();
+            hasTriggered = true;
+            StartQTE(); 
         }
     }
 
-    void StartQTE()
+    public void StartQTE()
     {
-        _isActive = true;
-        _currentClicks = 0;
+        if (handPrefabs == null || handPrefabs.Length == 0 || HandsGroup == null) return;
 
-        // 1. НАМЕРТВО ОСТАНАВЛИВАЕМ ИГРОКА
-        // Отключаем ваш скрипт Movement, чтобы заблокировать кнопки ходьбы
-        var movementScript = playerObject.GetComponent<Movement>();
-        if (movementScript != null) movementScript.enabled = false;
-
-        // Обнуляем скорость в Rigidbody2D, чтобы убрать скольжение по инерции
-        var rb = playerObject.GetComponent<Rigidbody2D>();
-        if (rb != null) rb.linearVelocity = Vector2.zero; 
-
-        // 2. ВКЛЮЧАЕМ ВИЗУАЛ
-        if (handsGroup != null)
+        // Если камеру не нашли в Start, пробуем найти еще раз
+        if (mainCameraTransform == null && Camera.main != null)
         {
-            handsGroup.SetActive(true);
-            _originalHandsPosition = handsGroup.transform.localPosition; // Запоминаем начальную позицию рук
-        }
-        if (qteTextUI != null) qteTextUI.SetActive(true);
-        if (_mainCameraTransform != null) _originalCameraPosition = _mainCameraTransform.localPosition; // Запоминаем позицию камеры
-
-        // 3. ЗАПУСКАЕМ ТАЙМЕР
-        StartCoroutine(TimeLimitRoutine());
-    }
-
-    void Update()
-    {
-        if (!_isActive) return;
-
-        // ЭФФЕКТ 1: Бешеная тряска рук каждый кадр
-        if (handsGroup != null)
-        {
-            float randomX = Random.Range(-handShakeIntensity, handShakeIntensity);
-            float randomY = Random.Range(-handShakeIntensity, handShakeIntensity);
-            handsGroup.transform.localPosition = _originalHandsPosition + new Vector3(randomX, randomY, 0);
+            mainCameraTransform = Camera.main.transform;
         }
 
-        // ЭФФЕКТ 2: Пульсация багрового экрана от страха
-        if (bloodOverlay != null)
+        // Запоминаем точную позицию камеры ДО начала тряски
+        if (mainCameraTransform != null)
         {
-            float alpha = Mathf.PingPong(Time.time * 3f, 0.4f); // Пульсирует от 0 до 0.4 прозрачности
-            Color c = bloodOverlay.color;
-            c.a = alpha;
-            bloodOverlay.color = c;
+            originalCameraPosition = mainCameraTransform.position;
         }
 
-        // Считывание кликов борьбы
-        if (Input.GetMouseButtonDown(0))
-        {
-            _currentClicks++;
-            
-            // ЭФФЕКТ 3: Тряска камеры при каждом клике мышкой
-            StartCoroutine(ShakeCameraRoutine(0.1f, cameraShakeIntensity));
+        timer = 0f;
+        isQteActive = true;
+        activeHandsCount = handPrefabs.Length; 
 
-            if (_currentClicks >= targetClicks)
+        // 1. Останавливаем игрока
+        if (PlayerObject != null)
+        {
+            MonoBehaviour[] scripts = PlayerObject.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
             {
-                StopAllCoroutines(); // Игрок успел, останавливаем таймер проиграша
-                WinQTE();
+                if (script != this) script.enabled = false;
+            }
+
+            Rigidbody2D rb = PlayerObject.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero; 
+                rb.angularVelocity = 0f;          
             }
         }
-    }
 
-    // Корутина тряски камеры при ударе/клике
-    IEnumerator ShakeCameraRoutine(float duration, float intensity)
-    {
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            float x = Random.Range(-intensity, intensity);
-            float y = Random.Range(-intensity, intensity);
-            
-            if (_mainCameraTransform != null)
-                _mainCameraTransform.localPosition = new Vector3(_originalCameraPosition.x + x, _originalCameraPosition.y + y, _originalCameraPosition.z);
-            
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-        if (_mainCameraTransform != null) _mainCameraTransform.localPosition = _originalCameraPosition; // Возвращаем камеру строго на место
-    }
-
-    // Этот таймер срабатывает, ЕСЛИ ИГРОК НЕ УСПЕЛ набрать клики
-    IEnumerator TimeLimitRoutine()
-    {
-        yield return new WaitForSeconds(timeLimit);
+        // 2. Включаем UI
+        if (HandsGroup != null) HandsGroup.SetActive(true);
+        if (QteTextUI != null) QteTextUI.SetActive(true);
         
-        _isActive = false; // Блокируем клики
+        if (BloodOverlay != null) 
+        {
+            BloodOverlay.gameObject.SetActive(true);
+            Color c = BloodOverlay.color;
+            BloodOverlay.color = new Color(c.r, c.g, c.b, minAlpha);
+        }
 
-        // МГНОВЕННЫЙ СБРОС СЦЕНЫ (Телепортация в начало)
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.name);
+        CalculateSpawnBounds();
+
+        // Очищаем старые руки
+        foreach (Transform child in HandsGroup.transform) {
+            Destroy(child.gameObject);
+        }
+
+        // Спавним 4 руки
+        for (int i = 0; i < handPrefabs.Length; i++)
+        {
+            SpawnSpecificHand(handPrefabs[i]);
+        }
     }
 
-    // Срабатывает, если игрок успел отбиться
-    void WinQTE()
+    private void Update()
     {
-        _isActive = false;
+        if (!isQteActive) return;
 
-        // Отключаем визуал и возвращаем объекты на исходные позиции
-        if (handsGroup != null)
+        // 1. Ограничение по времени
+        timer += Time.deltaTime;
+        if (timer >= TimeLimit)
         {
-            handsGroup.transform.localPosition = _originalHandsPosition;
-            handsGroup.SetActive(false);
+            QteFailed();
+            return; 
         }
 
-        if (qteTextUI != null) qteTextUI.SetActive(false);
-
-        if (bloodOverlay != null)
+        // 2. Пульсация красного экрана через синус
+        if (BloodOverlay != null)
         {
-            Color c = bloodOverlay.color;
-            c.a = 0f;
-            bloodOverlay.color = c;
+            float sinValue = Mathf.Sin(Time.time * pulseSpeed);
+            float normalizedSin = (sinValue + 1f) / 2f;
+            float targetAlpha = Mathf.Lerp(minAlpha, maxAlpha, normalizedSin);
+            
+            Color c = BloodOverlay.color;
+            BloodOverlay.color = new Color(c.r, c.g, c.b, targetAlpha);
         }
 
-        if (_mainCameraTransform != null) _mainCameraTransform.localPosition = _originalCameraPosition;
+        // 3. ТРЯСКА ВСЕГО ЭКРАНА (Смещение камеры по осям X и Y)
+        if (mainCameraTransform != null)
+        {
+            // Генерируем хаотичное, но плавное смещение с помощью Mathf.Sin
+            float shakeX = Mathf.Sin(Time.time * cameraShakeSpeed) * cameraShakeIntensity;
+            float shakeY = Mathf.Cos(Time.time * (cameraShakeSpeed * 1.1f)) * cameraShakeIntensity;
 
-        // ВОЗВРАЩАЕМ УПРАВЛЕНИЕ ХОДЬБОЙ
-        var movementScript = playerObject.GetComponent<Movement>();
-        if (movementScript != null) movementScript.enabled = true;
+            // Применяем смещение к исходной позиции камеры, не трогая глубину Z
+            mainCameraTransform.position = originalCameraPosition + new Vector3(shakeX, shakeY, 0f);
+        }
+    }
 
-        // Самоуничтожаем триггер, чтобы сцена проигрывалась только 1 раз за уровень
-        Destroy(gameObject);
+    private void CalculateSpawnBounds()
+    {
+        if (HandsGroup != null)
+        {
+            RectTransform rect = HandsGroup.GetComponent<RectTransform>();
+            Vector3[] corners = new Vector3[4];
+            rect.GetLocalCorners(corners);
+            minBounds = corners[0]; 
+            maxBounds = corners[2]; 
+        }
+    }
+
+    private void SpawnSpecificHand(GameObject prefab)
+    {
+        GameObject newHand = Instantiate(prefab, HandsGroup.transform);
+        RectTransform handRect = newHand.GetComponent<RectTransform>();
+        handRect.anchoredPosition = new Vector2(Random.Range(minBounds.x, maxBounds.x), Random.Range(minBounds.y, maxBounds.y));
+
+        MovingHandTarget handScript = newHand.AddComponent<MovingHandTarget>();
+        handScript.Setup(this, handMoveSpeed, minBounds, maxBounds);
+    }
+
+    public void OnHandClicked()
+    {
+        activeHandsCount--; 
+
+        if (activeHandsCount <= 0)
+        {
+            QteSuccess();
+        }
+    }
+
+    private void QteSuccess()
+    {
+        isQteActive = false;
+        isPermanentlyPassed = true;
+        
+        // Возвращаем камеру строго в исходную точку
+        if (mainCameraTransform != null)
+        {
+            mainCameraTransform.position = originalCameraPosition;
+        }
+
+        if (HandsGroup != null) HandsGroup.SetActive(false);
+        if (BloodOverlay != null) BloodOverlay.gameObject.SetActive(false);
+        if (QteTextUI != null) QteTextUI.SetActive(false);
+
+        if (PlayerObject != null)
+        {
+            MonoBehaviour[] scripts = PlayerObject.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
+            {
+                script.enabled = true; 
+            }
+        }
+
+        Debug.Log("QTE Успешно пройдено!");
+    }
+
+    private void QteFailed()
+    {
+        isQteActive = false;
+        
+        // Возвращаем камеру в норму перед перезапуском
+        if (mainCameraTransform != null)
+        {
+            mainCameraTransform.position = originalCameraPosition;
+        }
+
+        if (HandsGroup != null) HandsGroup.SetActive(false);
+        if (BloodOverlay != null) BloodOverlay.gameObject.SetActive(false);
+        if (QteTextUI != null) QteTextUI.SetActive(false);
+
+        // Перезагрузка сцены
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
+    }
+}
+
+// (Вспомогательный класс MovingHandTarget ниже)
+public class MovingHandTarget : MonoBehaviour
+{
+    private StaircaseQTE qteManager;
+    private RectTransform rectTransform;
+    private Vector2 targetPosition;
+    private float speed;
+    private Vector2 minB;
+    private Vector2 maxB;
+    private float directionTimer;
+
+    public void Setup(StaircaseQTE manager, float moveSpeed, Vector2 minBounds, Vector2 maxBounds)
+    {
+        qteManager = manager;
+        speed = moveSpeed;
+        minB = minBounds;
+        maxB = maxBounds;
+        rectTransform = GetComponent<RectTransform>();
+
+        SetNewRandomTarget();
+        LookAtCenter();
+
+        Button btn = GetComponent<Button>();
+        if (btn == null) btn = gameObject.AddComponent<Button>();
+        
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(Clicked);
+    }
+
+    private void Update()
+    {
+        rectTransform.anchoredPosition = Vector2.MoveTowards(rectTransform.anchoredPosition, targetPosition, speed * Time.deltaTime);
+        LookAtCenter();
+
+        directionTimer += Time.deltaTime;
+        if (directionTimer >= 0.6f || Vector2.Distance(rectTransform.anchoredPosition, targetPosition) < 10f)
+        {
+            SetNewRandomTarget();
+            directionTimer = 0f;
+        }
+    }
+
+    private void SetNewRandomTarget()
+    {
+        targetPosition = new Vector2(Random.Range(minB.x, maxB.x), Random.Range(minB.y, maxB.y));
+    }
+
+    private void LookAtCenter()
+    {
+        if (rectTransform == null) return;
+        Vector2 directionToCenter = Vector2.zero - rectTransform.anchoredPosition;
+        float angle = Mathf.Atan2(directionToCenter.y, directionToCenter.x) * Mathf.Rad2Deg;
+        rectTransform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
+    private void Clicked()
+    {
+        if (qteManager != null) qteManager.OnHandClicked();
+        Destroy(gameObject); 
     }
 }

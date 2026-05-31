@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 1.3333334
-    y: 50
-    width: 1277.3334
-    height: 620.6667
+    x: 11.333334
+    y: 52
+    width: 875.3334
+    height: 662.6667
   m_ShowMode: 4
-  m_Title: Project
+  m_Title: Game
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -43,21 +43,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 36
-<<<<<<< HEAD
-    width: 1440
-    height: 814
+    width: 875.3334
+    height: 606.6667
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 17
-=======
-    width: 1277.3334
-    height: 564.6667
-  m_MinSize: {x: 300, y: 112}
-  m_MaxSize: {x: 24288, y: 16192}
-  vertical: 0
-  controlID: 47
->>>>>>> katya
+  controlID: 92
   draggingID: 0
 --- !u!114 &3
 MonoBehaviour:
@@ -74,23 +65,13 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 1135.5
+    x: 600.6667
     y: 0
-    width: 304.5
-    height: 814
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
-  m_ActualView: {fileID: 16}
-=======
-    x: 1018.6667
-    y: 0
-    width: 258.6667
-    height: 564.6667
+    width: 274.6667
+    height: 606.6667
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
->>>>>>> katya
   m_Panes:
   - {fileID: 15}
   m_Selected: 0
@@ -112,13 +93,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-    width: 293
-    height: 610.5
-=======
-    width: 263.33334
-    height: 358
->>>>>>> katya
+    width: 236.66667
+    height: 330.66666
   m_MinSize: {x: 201, y: 226}
   m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 16}
@@ -142,15 +118,9 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-<<<<<<< HEAD
-    y: 610.5
-    width: 1135.5
-    height: 203.5
-=======
-    y: 358
-    width: 1018.6667
-    height: 206.66669
->>>>>>> katya
+    y: 330.66666
+    width: 600.6667
+    height: 276.00003
   m_MinSize: {x: 231, y: 276}
   m_MaxSize: {x: 10001, y: 10026}
   m_ActualView: {fileID: 14}
@@ -179,13 +149,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-    width: 1440
-    height: 870
-=======
-    width: 1277.3334
-    height: 620.6667
->>>>>>> katya
+    width: 875.3334
+    height: 662.6667
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
@@ -209,11 +174,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-    width: 1440
-=======
-    width: 1277.3334
->>>>>>> katya
+    width: 875.3334
     height: 36
   m_MinSize: {x: 50, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
@@ -234,13 +195,8 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-<<<<<<< HEAD
-    y: 850
-    width: 1440
-=======
-    y: 600.6667
-    width: 1277.3334
->>>>>>> katya
+    y: 642.6667
+    width: 875.3334
     height: 20
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
@@ -263,21 +219,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-    width: 1135.5
-    height: 814
+    width: 600.6667
+    height: 606.6667
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 97
-=======
-    width: 1018.6667
-    height: 564.6667
-  m_MinSize: {x: 200, y: 112}
-  m_MaxSize: {x: 16192, y: 16192}
-  vertical: 1
-  controlID: 48
->>>>>>> katya
+  controlID: 93
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -298,21 +245,12 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-<<<<<<< HEAD
-    width: 1135.5
-    height: 610.5
+    width: 600.6667
+    height: 330.66666
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 98
-=======
-    width: 1018.6667
-    height: 358
-  m_MinSize: {x: 200, y: 56}
-  m_MaxSize: {x: 16192, y: 8096}
-  vertical: 0
-  controlID: 49
->>>>>>> katya
+  controlID: 94
   draggingID: 0
 --- !u!114 &11
 MonoBehaviour:
@@ -329,17 +267,10 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 293
+    x: 236.66667
     y: 0
-    width: 842.5
-    height: 610.5
-=======
-    x: 263.33334
-    y: 0
-    width: 755.3334
-    height: 358
->>>>>>> katya
+    width: 364
+    height: 330.66666
   m_MinSize: {x: 202, y: 226}
   m_MaxSize: {x: 4002, y: 4026}
   m_ActualView: {fileID: 17}
@@ -358,83 +289,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-<<<<<<< HEAD
-  m_Script: {fileID: 12914, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEditor.Graphs.dll::UnityEditor.Graphs.AnimatorControllerTool
-  m_MinSize: {x: 50, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
-  m_TitleContent:
-    m_Text: Animator
-    m_Image: {fileID: 1711060831702674872, guid: 0000000000000000d000000000000000, type: 0}
-    m_Tooltip: 
-    m_TextWithWhitespace: "Animator\u200B"
-  m_Pos:
-    serializedVersion: 2
-    x: 293
-    y: 78
-    width: 840.5
-    height: 584.5
-  m_SerializedDataModeController:
-    m_DataMode: 0
-    m_PreferredDataMode: 0
-    m_SupportedDataModes: 
-    isAutomatic: 1
-  m_ViewDataDictionary: {fileID: 0}
-  m_OverlayCanvas:
-    m_LastAppliedPresetName: Default
-    m_SaveData: []
-    m_ContainerData: []
-    m_DynamicPanelContainerData: []
-    m_OverlaysVisible: 1
-    m_DynamicPanelBehavior: 0
-  m_ViewTransforms:
-    m_KeySerializationHelper:
-    - {fileID: 9134668972305206976, guid: 74ba442e0a693464497d5ffecee65766, type: 2}
-    m_ValueSerializationHelper:
-    - e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-  m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: 74ba442e0a693464497d5ffecee65766, type: 2}
-  m_BreadCrumbs:
-  - m_Target: {fileID: 9134668972305206976, guid: 74ba442e0a693464497d5ffecee65766, type: 2}
-    m_ScrollPosition: {x: 0, y: 0}
-  stateMachineGraph: {fileID: 0}
-  stateMachineGraphGUI: {fileID: 0}
-  blendTreeGraph: {fileID: 0}
-  blendTreeGraphGUI: {fileID: 0}
-  m_AutoLiveLink: 1
-  m_MiniTool: 0
-  m_LockTracker:
-    m_IsLocked: 0
-  m_CurrentEditor: 0
-  m_LayerEditor:
-    m_SelectedLayerIndex: 0
---- !u!114 &13
-MonoBehaviour:
-  m_ObjectHideFlags: 52
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-=======
->>>>>>> katya
   m_Script: {fileID: 13987, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: UnityEditor.dll::UnityEditor.MainToolbarWindow
@@ -447,15 +301,9 @@ MonoBehaviour:
     m_TextWithWhitespace: "UnityEditor.MainToolbarWindow\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 0
-    y: 0
-    width: 1440
-=======
-    x: 1.3333334
-    y: 50
-    width: 1277.3334
->>>>>>> katya
+    x: 11.333334
+    y: 52
+    width: 875.3334
     height: 36
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -719,17 +567,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Asset Store\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 293
-    y: 78
-    width: 840.5
-    height: 584.5
-=======
     x: 264.6667
     y: 86
     width: 754
     height: 372.66666
->>>>>>> katya
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -764,17 +605,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 0
-    y: 634.5
-    width: 1134.5
-    height: 177.5
-=======
-    x: 1.3333334
-    y: 444
-    width: 1017.6667
-    height: 180.66669
->>>>>>> katya
+    x: 11.333334
+    y: 418.6667
+    width: 599.6667
+    height: 250.00003
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -799,11 +633,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-<<<<<<< HEAD
-    - Assets/Scenes
-=======
-    - Assets/Backgrounds
->>>>>>> katya
+    - "Assets/\u0434\u0435\u0442\u0430\u043B\u0438 \u043F\u043E\u0434\u0432\u0430\u043B\u0430"
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -813,44 +643,22 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-<<<<<<< HEAD
-  - Assets/Scenes
-  m_LastFoldersGridSize: 16
-  m_LastProjectPath: "C:\\Users\\nastya\\university\\\u0438\u0433\u0440\u0430\\Team-32-3"
-=======
-  - Assets/Backgrounds
+  - "Assets/\u0434\u0435\u0442\u0430\u043B\u0438 \u043F\u043E\u0434\u0432\u0430\u043B\u0430"
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\Minty.FORTIS_M\Game
->>>>>>> katya
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-<<<<<<< HEAD
-    scrollPos: {x: 0, y: 102.5}
+    scrollPos: {x: 0, y: 77.99997}
     m_SelectedIDs:
-    - m_Data: 51512
+    - m_Data: 51790
     m_LastClickedID:
-      m_Data: 51512
+      m_Data: 51790
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 51402
-    - m_Data: 51404
-    - m_Data: 51406
-    - m_Data: 51408
-    - m_Data: 51410
-=======
-    scrollPos: {x: 0, y: 55.333313}
-    m_SelectedIDs:
-    - m_Data: 52120
-    m_LastClickedID:
-      m_Data: 52120
-    m_ExpandedIDs:
-    - m_Data: 0
-    - m_Data: 50910
-    - m_Data: 50912
+    - m_Data: 51444
     - m_Data: 1000000000
->>>>>>> katya
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -884,16 +692,7 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-<<<<<<< HEAD
-    - m_Data: 51402
-    - m_Data: 51404
-    - m_Data: 51406
-    - m_Data: 51408
-    - m_Data: 51410
-=======
-    - m_Data: 50910
-    - m_Data: 50912
->>>>>>> katya
+    - m_Data: 51444
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -922,28 +721,23 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_Data: 52866
+    - m_Data: -110256
     m_LastClickedEntityId:
-      m_Data: 52866
+      m_Data: -110256
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs:
     - m_Data: 50540
     - m_Data: 50768
-<<<<<<< HEAD
-    - m_Data: 61668
-    - m_Data: 50948
-    - m_Data: 53052
-    - m_Data: 50998
-    - m_Data: 53090
-    - m_Data: 51054
-    - m_Data: 51052
-    - m_Data: 51044
-    - m_Data: 61290
-    - m_Data: 51042
-    - m_Data: 51050
-    - m_Data: 51566
-=======
->>>>>>> katya
+    - m_Data: 50058
+    - m_Data: 51640
+    - m_Data: 73162
+    - m_Data: 57304
+    - m_Data: 57244
+    - m_Data: 49694
+    - m_Data: 49548
+    - m_Data: 51784
+    - m_Data: 52392
+    - m_Data: 52372
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -995,17 +789,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 1136.5
-    y: 24
-    width: 303.5
-    height: 788
-=======
-    x: 1020
-    y: 86
-    width: 257.6667
-    height: 538.6667
->>>>>>> katya
+    x: 612
+    y: 88
+    width: 273.6667
+    height: 580.6667
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1027,7 +814,7 @@ MonoBehaviour:
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectEntityId:
     m_Data: 0
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 47.333313
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
@@ -1054,17 +841,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 0
-    y: 24
-    width: 292
-    height: 584.5
-=======
-    x: 1.3333334
-    y: 86
-    width: 262.33334
-    height: 332
->>>>>>> katya
+    x: 11.333334
+    y: 88
+    width: 235.66667
+    height: 304.66666
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1080,35 +860,29 @@ MonoBehaviour:
     m_DynamicPanelBehavior: 0
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: []
+      scrollPos: {x: 0, y: 196.33334}
+      m_SelectedIDs:
+      - m_Data: -110256
       m_LastClickedID:
-        m_Data: 0
+        m_Data: -110256
       m_ExpandedIDs:
-<<<<<<< HEAD
-      - m_Data: -17112
-      - m_Data: -16884
-      - m_Data: -16660
-      - m_Data: -13296
-      - m_Data: -13022
-      - m_Data: -12798
-      - m_Data: -12478
-      - m_Data: -1356
-      - m_Data: -1342
-      - m_Data: 50782
-      - m_Data: 50792
-      - m_Data: 50826
-      - m_Data: 50878
-      - m_Data: 50952
-      - m_Data: 53604
-      - m_Data: 53730
-=======
-      - m_Data: -10082
-      - m_Data: -9634
-      - m_Data: -9404
-      - m_Data: -1342
-      - m_Data: 50738
->>>>>>> katya
+      - m_Data: -124326
+      - m_Data: -121314
+      - m_Data: -112114
+      - m_Data: -112082
+      - m_Data: -110256
+      - m_Data: -83832
+      - m_Data: -72898
+      - m_Data: -71472
+      - m_Data: -32210
+      - m_Data: -32178
+      - m_Data: -31898
+      - m_Data: -26296
+      - m_Data: -2694
+      - m_Data: -1946
+      - m_Data: 53474
+      - m_Data: 53546
+      - m_Data: 68362
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1156,17 +930,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 294
-    y: 24
-    width: 840.5
-    height: 584.5
-=======
-    x: 264.6667
-    y: 86
-    width: 753.3334
-    height: 332
->>>>>>> katya
+    x: 248
+    y: 88
+    width: 362
+    height: 304.66666
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1177,17 +944,17 @@ MonoBehaviour:
     m_LastAppliedPresetName: Default
     m_SaveData:
     - dockPosition: 0
-      containerId: overlay-dynamic-panel--left
+      containerId: overlay-container--left
       displayed: 1
       id: unity-transform-toolbar
       index: 0
-      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":4.5,"y":49.5},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      contents: '{"m_Layout":2,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":161.66668701171876,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
-      snapOffset: {x: 4.5, y: 49.5}
+      snapOffset: {x: 161.66669, y: 0}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 0
-      layout: 4
+      layout: 2
       size: {x: 0, y: 0}
       sizeOverridden: 0
     - dockPosition: 0
@@ -1195,12 +962,12 @@ MonoBehaviour:
       displayed: 1
       id: unity-scene-view-toolbar
       index: 5
-      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":-289.5,"y":-277.33233642578127},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":3,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":9.83331298828125,"y":-131.99899291992188},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":2,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
-      snapOffset: {x: -289.5, y: -277.33234}
+      snapOffset: {x: 9.833313, y: -131.999}
       snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 3
+      snapCorner: 2
       layout: 4
       size: {x: 0, y: 0}
       sizeOverridden: 0
@@ -1209,11 +976,11 @@ MonoBehaviour:
       displayed: 0
       id: unity-grid-and-snap-toolbar
       index: 4
-      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":-437.0,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":1,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":-437.0,"y":0.0},"m_SnapOffsetDelta":{"x":75.0,"y":0.0},"m_FloatingSnapCorner":1,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
       snapOffset: {x: -437, y: 0}
-      snapOffsetDelta: {x: 0, y: 0}
+      snapOffsetDelta: {x: 75, y: 0}
       snapCorner: 1
       layout: 4
       size: {x: 0, y: 0}
@@ -1545,17 +1312,10 @@ MonoBehaviour:
       displayed: 1
       id: SceneView/CamerasOverlay
       index: 14
-<<<<<<< HEAD
-      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":true,"m_Floating":false,"m_FloatingSnapOffset":{"x":-130.0,"y":-73.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":3,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
-      floating: 0
-      collapsed: 0
-      snapOffset: {x: -130, y: -73}
-=======
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":true,"m_Floating":false,"m_FloatingSnapOffset":{"x":-254.0,"y":-184.00001525878907},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":3,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
       snapOffset: {x: -254, y: -184.00002}
->>>>>>> katya
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 3
       layout: 4
@@ -1722,13 +1482,10 @@ MonoBehaviour:
       scrollOffset: 0
     m_DynamicPanelContainerData:
     - containerId: overlay-dynamic-panel--left
-      width: 163
+      width: 56
       saveData:
-        state: 1
-        overlayData:
-        - overlayId: unity-transform-toolbar
-          metaData:
-            currentHeight: 180.5
+        state: 0
+        overlayData: []
     - containerId: overlay-dynamic-panel--right
       width: 56
       saveData:
@@ -1747,15 +1504,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-<<<<<<< HEAD
-    m_Target: {x: 360.61926, y: 220.73479, z: 1.3095002}
+    m_Target: {x: 209.15123, y: 97.412254, z: -601.72955}
     speed: 2
-    m_Value: {x: 360.61926, y: 220.73479, z: 1.3095002}
-=======
-    m_Target: {x: -0.988791, y: -0.4549792, z: -271.69894}
-    speed: 2
-    m_Value: {x: -2.096507, y: -0.39036244, z: -271.70422}
->>>>>>> katya
+    m_Value: {x: 209.15123, y: 97.412254, z: -601.72955}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1806,15 +1557,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-<<<<<<< HEAD
-    m_Target: 295.4658
+    m_Target: 138.26735
     speed: 2
-    m_Value: 295.4658
-=======
-    m_Target: 11.215362
-    speed: 2
-    m_Value: 11.7438345
->>>>>>> katya
+    m_Value: 138.26735
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1869,17 +1614,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 0
-    y: 688.5
-    width: 1134.5
-    height: 177.5
-=======
-    x: 1.3333334
-    y: 444
-    width: 1017.6667
-    height: 180.66669
->>>>>>> katya
+    x: 226.66667
+    y: 400
+    width: 621.6667
+    height: 224.66669
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1914,17 +1652,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-<<<<<<< HEAD
-    x: 293
-    y: 78
-    width: 840.5
-    height: 584.5
-=======
-    x: 264.6667
-    y: 86
-    width: 753.3334
-    height: 332
->>>>>>> katya
+    x: 248
+    y: 88
+    width: 362
+    height: 304.66666
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1946,7 +1677,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 553, y: 311}
+  m_TargetSize: {x: 362, y: 204}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -1961,17 +1692,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-<<<<<<< HEAD
-    m_HBaseRangeMin: -210.125
-    m_HBaseRangeMax: 210.125
-    m_VBaseRangeMin: -118.25
-    m_VBaseRangeMax: 118.25
-=======
-    m_HBaseRangeMin: -184.33334
-    m_HBaseRangeMax: 184.33334
-    m_VBaseRangeMin: -103.66667
-    m_VBaseRangeMax: 103.66667
->>>>>>> katya
+    m_HBaseRangeMin: -120.66667
+    m_HBaseRangeMax: 120.66667
+    m_VBaseRangeMin: -68
+    m_VBaseRangeMax: 68
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -1989,40 +1713,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-<<<<<<< HEAD
-      width: 840.5
-      height: 563.5
-    m_Scale: {x: 2, y: 2}
-    m_Translation: {x: 420.25, y: 281.75}
-=======
-      width: 753.3334
-      height: 311
-    m_Scale: {x: 1.5, y: 1.5}
-    m_Translation: {x: 376.6667, y: 155.49998}
->>>>>>> katya
+      width: 362
+      height: 283.66666
+    m_Scale: {x: 1.5011238, y: 1.5011235}
+    m_Translation: {x: 181, y: 141.83333}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-<<<<<<< HEAD
-      x: -210.125
-      y: -140.875
-      width: 420.25
-      height: 281.75
-    m_MinimalGUI: 1
-  m_defaultScale: 2
-  m_LastWindowPixelSize: {x: 1681, y: 1169}
-=======
-      x: -251.11113
-      y: -103.66666
-      width: 502.22226
-      height: 207.33333
+      x: -120.57633
+      y: -94.48478
+      width: 241.15266
+      height: 188.96956
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 1130, y: 498}
->>>>>>> katya
+  m_LastWindowPixelSize: {x: 543, y: 457}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
