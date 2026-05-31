@@ -9,6 +9,10 @@ namespace DefaultNamespace
         public float fleeSpeed = 250f;
         public Transform[] patrolPoints;
         
+        [Header("Настройки замешательства")]
+        [Tooltip("Начальная скорость кручения (было 6)")]
+        public float confusionSpeed = 5f; 
+        
         private int currentPoint;
         private bool isFeeling;
         private Transform escapePoint;
@@ -36,7 +40,7 @@ namespace DefaultNamespace
             if (isFeeling) {
                 MoveTowards(escapePoint.position, fleeSpeed);
             } else if (isConfused) {
-                spriteRenderer.flipX = (Mathf.PingPong(Time.time * 6, 1) > 0.5f); // Метод для кручения
+                spriteRenderer.flipX = (Mathf.PingPong(Time.time * confusionSpeed, 1) > 0.5f); // Метод для кручения
             } else {
                 Patrol();
             }
@@ -58,14 +62,18 @@ namespace DefaultNamespace
         {
             transform.position = Vector2.MoveTowards(transform.position, target, currentSpeed * Time.deltaTime);
 
-            if (target.x > transform.position.x)
+            if (!isConfused)
             {
-                spriteRenderer.flipX = true;
+                if (target.x > transform.position.x)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
             }
-            else
-            {
-                spriteRenderer.flipX = false;
-            }
+
             if (isFeeling && Vector2.Distance(transform.position, target) < 0.2f)
             {
                 Destroy(gameObject); // NPC исчезает, дойдя до точки выхода
@@ -76,8 +84,19 @@ namespace DefaultNamespace
         {
             isConfused = true;
             isFeeling = false;
+            confusionSpeed = 6f;
         
             StopParticles(); // Отключаем частицы сразу при начале кручения
+        }
+        
+        public void MakeRotationFaster()
+        {
+            if (isConfused)
+            {
+                // Увеличиваем скорость пинг-понга (например, до 18, чтобы он вертелся в 3 раза быстрее)
+                confusionSpeed = 10f; 
+                Debug.Log("NPC паникует! Скорость вращения увеличена.");
+            }
         }
 
         public void StartFeeling(Transform exit)

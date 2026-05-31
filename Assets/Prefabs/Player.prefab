@@ -182,4 +182,4 @@ MonoBehaviour:
   speed: 5
   sprintMultiplier: 2
   sideSprite: {fileID: 7152930139536384079, guid: 413223666d4217144aa0b046ac36f490, type: 3}
-  backSprite: {fileID: 2565896155084494068, guid: b8ab3666dd2cb4444b950bdcca62939d, type: 3}
+  backSprite: {fileID: 2563453594311069375, guid: 3d36a1df7b2f7f64485e9f1d795ecdaf, type: 3}
