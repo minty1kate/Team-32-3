@@ -15,7 +15,8 @@ public class MiniGameManager : MonoBehaviour
     // ГЛОБАЛЬНАЯ ПАМЯТЬ МИНИ-ИГРЫ
     public static int currentScore = 0; 
     public static List<string> usedIngredients = new List<string>(); // Список добавленных продуктов
-
+    public static bool isSoupDone = false; 
+    
     private int maxScore = 3;
 
     void Start()
@@ -45,6 +46,8 @@ public class MiniGameManager : MonoBehaviour
         if (currentScore >= maxScore)
         {
             // Сбрасываем прогресс мини-игры на случай, если игра начнется заново
+            isSoupDone = true;
+            
             ResetMiniGameProgress(); 
             SceneManager.LoadScene(cutsceneSceneName);
         }
