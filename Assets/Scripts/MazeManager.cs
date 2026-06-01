@@ -27,7 +27,7 @@ public class MazeManager : MonoBehaviour
     public SafePicture safePicture;
     public SpriteRenderer pictureSpriteRenderer;
     public Sprite openSafeWallSprite;
-    public DoorHighlight doorScript; // Ссылка на скрипт двери
+    public DoorHighlight doorScript;
 
     public MonoBehaviour playerMovementScript;
 
@@ -91,7 +91,6 @@ public class MazeManager : MonoBehaviour
         if (keyItem != null) keyItem.SetActive(true);
         if (pictureSpriteRenderer != null && openSafeWallSprite != null) pictureSpriteRenderer.sprite = openSafeWallSprite;
 
-        // РАЗБЛОКИРУЕМ ДВЕРЬ НА СЦЕНЕ
         if (doorScript != null) doorScript.UnlockDoor();
 
         TriggerFinalHallDialogue();
@@ -140,10 +139,10 @@ public class MazeManager : MonoBehaviour
     {
         if (playerMovementScript != null) playerMovementScript.enabled = true;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
-        Debug.Log("Движение игрока восстановлено, курсор скрыт.");
+        Debug.Log("Движение игрока восстановлено, курсор оставлен видимым.");
     }
 
     public void CloseMaze()

@@ -5834,6 +5834,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349848846}
   m_CullTransparentMesh: 1
+--- !u!1001 &350066581
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 152439862456876687, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_Size.x
+      value: 5.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 152439862456876687, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_Size.y
+      value: 12.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 152439862456876687, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 436055366662064998, guid: eec6e600edb3eb141a6e82ce3648c3c3, type: 3}
+    - target: {fileID: 152439862456876687, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 152439862456876687, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 504823284923367081, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: isHidden
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 504823284923367081, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: sideSprite
+      value: 
+      objectReference: {fileID: 436055366662064998, guid: eec6e600edb3eb141a6e82ce3648c3c3, type: 3}
+    - target: {fileID: 1346082889834293251, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_Name
+      value: Player 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4526820885895298652, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: lyingSprite
+      value: 
+      objectReference: {fileID: 436055366662064998, guid: eec6e600edb3eb141a6e82ce3648c3c3, type: 3}
+    - target: {fileID: 4526820885895298652, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: standingSprite
+      value: 
+      objectReference: {fileID: 436055366662064998, guid: eec6e600edb3eb141a6e82ce3648c3c3, type: 3}
+    - target: {fileID: 4526820885895298652, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: dialogueManager
+      value: 
+      objectReference: {fileID: 1140842123}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 16.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879799396468456572, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
 --- !u!1 &364919824
 GameObject:
   m_ObjectHideFlags: 0
@@ -8410,7 +8507,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4731530846769521447, guid: 9c52b3ed36863e74ba2267e4f961b788, type: 3}
   m_PrefabInstance: {fileID: 2064252925}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 518596079}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d4b11388596bae45846508dc60b4bd4, type: 3}
@@ -11155,7 +11252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7730772e90011a94d9f4ed9da2707146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HidingSpot
-  player: {fileID: 518596079}
+  player: {fileID: 986157563}
   highlightColor: {r: 0.1882353, g: 0.1882353, b: 0.1882353, a: 0.74509805}
   hidingAudioSource: {fileID: 735675495}
   hideSound: {fileID: 8300000, guid: 3495cb87f4d534547a0595507264cfc6, type: 3}
@@ -15938,6 +16035,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 984244272}
   m_CullTransparentMesh: 1
+--- !u!1 &986157563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1346082889834293251, guid: 9b794dcdcd597be4d9c54602f567722a, type: 3}
+  m_PrefabInstance: {fileID: 350066581}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &991864621
 GameObject:
   m_ObjectHideFlags: 0
@@ -18163,7 +18265,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorHighlight
   highlightColor: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 0.8627451}
-  sceneToLoad: "\u0425\u043E\u043B\u043B"
+  sceneToLoad: "\u041F\u043E\u0434\u0432\u0430\u043B(\u043B\u043E\u043A\u0430\u0446\u0438\u044F
+    \u21164)"
   doorAudioSource: {fileID: 1093748851}
   openDoorSound: {fileID: 8300000, guid: d2910b9b882a71040a030c4a4e5f00ac, type: 3}
 --- !u!61 &1093748848
@@ -30585,7 +30688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7730772e90011a94d9f4ed9da2707146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HidingSpot
-  player: {fileID: 518596079}
+  player: {fileID: 986157563}
   highlightColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 0.74509805}
   hidingAudioSource: {fileID: 1822702584}
   hideSound: {fileID: 8300000, guid: 3495cb87f4d534547a0595507264cfc6, type: 3}
@@ -34928,6 +35031,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1715395348}
   - {fileID: 2064252925}
+  - {fileID: 350066581}
   - {fileID: 20349820}
   - {fileID: 962916555}
   - {fileID: 519777752}
