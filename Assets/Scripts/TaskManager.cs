@@ -9,7 +9,7 @@ public class TaskManager : MonoBehaviour
 
     private List<string> allTasks = new List<string> {
         "Встать с кровати (Клавиша C)",
-        "Собрать осколки зеркала (0/3)", // Теперь это индекс 1
+        "Собрать осколки зеркала (0/3)",
         "Починить зеркало",
         "Найти брата"
     };
@@ -25,6 +25,15 @@ public class TaskManager : MonoBehaviour
         }
     }
 
+    // МЕТОД ДЛЯ СМЕНЫ ЗАДАЧ НА СЦЕНЕ (Загружает сразу цепочку новых квестов)
+    public void SetSceneTasks(string[] newTasks)
+    {
+        allTasks.Clear();
+        allTasks.AddRange(newTasks);
+        currentTaskIndex = 0;
+        UpdateTaskUI();
+    }
+
     public void CompleteCurrentTask()
     {
         if (currentTaskIndex < allTasks.Count)
@@ -37,13 +46,10 @@ public class TaskManager : MonoBehaviour
     public void IncrementMirrorPieces()
     {
         collectedPieces++;
-
-        // Обновляем текст под индексом 1 (теперь это осколки)
         allTasks[1] = $"Собрать осколки зеркала ({collectedPieces}/3)";
 
         if (collectedPieces >= 3)
         {
-            // Завершаем текущую задачу (осколки), индекс станет 2
             CompleteCurrentTask();
         }
         else

@@ -1,14 +1,20 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Обязательно добавь эту строку!
+using UnityEngine.SceneManagement;
+using System.Collections; // Добавлено для работы корутин
 
 public class DoorHighlight : MonoBehaviour
 {
     private SpriteRenderer _sr;
     private Color _originalColor;
     private bool _isPlayerInside = false;
+    private bool _isUnlocked = false;
 
     [SerializeField] private Color highlightColor = Color.gray;
-    [SerializeField] private string sceneToLoad; // Название сцены, куда идем
+    [SerializeField] private string sceneToLoad;
+
+    [Header("Звуковые эффекты")]
+    [SerializeField] private AudioSource doorAudioSource; // Источник звука
+    [SerializeField] private AudioClip openDoorSound;     // Клип открытия двери
 
     void Start()
     {
@@ -18,15 +24,41 @@ public class DoorHighlight : MonoBehaviour
 
     void Update()
     {
-        // Если игрок в зоне И нажал клавишу E
-        if (_isPlayerInside && Input.GetKeyDown(KeyCode.E))
+        if (_isUnlocked && _isPlayerInside && Input.GetKeyDown(KeyCode.E))
         {
-            LoadNewScene();
+            // Запускаем корутину вместо прямого метода загрузки
+            StartCoroutine(LoadSceneWithSoundRoutine());
         }
     }
 
-    private void LoadNewScene()
+    public void UnlockDoor()
     {
+        _isUnlocked = true;
+        if (_isPlayerInside)
+        {
+            _sr.color = highlightColor;
+        }
+    }
+
+    private IEnumerator LoadSceneWithSoundRoutine()
+    {
+        // Выключаем коллайдер, чтобы игрок не нажал "Е" повторно во время задержки
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        // Воспроизводим звук
+        if (doorAudioSource != null && openDoorSound != null)
+        {
+            doorAudioSource.PlayOneShot(openDoorSound);
+            // Ждем длительность звукового файла перед сменой сцены
+            yield return new WaitForSeconds(openDoorSound.length);
+        }
+        else
+        {
+            // Если звука нет, ждем 0 кадров, чтобы не было ошибки
+            yield return null;
+        }
+
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
             SceneManager.LoadScene(sceneToLoad);
@@ -42,7 +74,10 @@ public class DoorHighlight : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _isPlayerInside = true;
-            _sr.color = highlightColor;
+            if (_isUnlocked)
+            {
+                _sr.color = highlightColor;
+            }
         }
     }
 
