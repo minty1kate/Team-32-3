@@ -51,6 +51,20 @@ namespace DefaultNamespace
             {
                 IsFirstStepCompleted = false;
                 IsPuzzleCompleted = false;
+
+                // Передаем задачи гостиной в TaskManager прямо отсюда!
+                TaskManager tm = FindAnyObjectByType<TaskManager>();
+                if (tm != null)
+                {
+                    string[] livingRoomTasks = new string[]
+                    {
+                        "Напугать существо",
+                        "Собрать картину",
+                        "Уронить книжки",
+                        "Проверить кухню"
+                    };
+                    tm.SetSceneTasks(livingRoomTasks);
+                }
             }
         }
 
@@ -131,27 +145,24 @@ namespace DefaultNamespace
                     puzzleWindow.SetActive(true);
                 }
             }
-            // ЛОГИКА КОГДА УРОНИЛИ КНИЖКИ (NPC убегает)
             else if (currentStep == StepType.FinalStep_RunAway)
             {
-                _eventTriggered = true; // Защита от повторного падения книг
+                _eventTriggered = true;
 
                 if (backgroundObject != null)
                 {
-                    backgroundObject.SetActive(false); // Шкаф падает/исчезает, книги летят
+                    backgroundObject.SetActive(false);
                 }
 
                 yield return new WaitForSeconds(0.2f);
 
                 if (npcScript != null)
                 {
-                    npcScript.StartFeeling(exitPoint); // Брат в ужасе убегает
+                    npcScript.StartFeeling(exitPoint);
                 }
 
-                // Небольшая пауза, чтобы игрок успел проводить взглядом убегающего брата
                 yield return new WaitForSeconds(1.5f);
 
-                // ЗАПУСК МОНОЛОГА ПОСЛЕ ПОБЕГА БРАТА И ГРОХОТА КНИГ
                 if (dialogueManager != null)
                 {
                     TogglePlayerMovement(false);
@@ -185,6 +196,9 @@ namespace DefaultNamespace
         {
             TogglePlayerMovement(true);
             IsFirstStepCompleted = true;
+
+            TaskManager tm = FindAnyObjectByType<TaskManager>();
+            if (tm != null) tm.CompleteCurrentTask();
         }
 
         public void CompletePuzzleStep()
@@ -229,12 +243,17 @@ namespace DefaultNamespace
         private void OnPuzzleDialogueFinished()
         {
             TogglePlayerMovement(true);
+
+            TaskManager tm = FindAnyObjectByType<TaskManager>();
+            if (tm != null) tm.CompleteCurrentTask();
         }
 
         private void OnFinalDialogueFinished()
         {
             TogglePlayerMovement(true);
-            // Тут можно открыть дверь на кухню или сменить квест в TaskManager
+
+            TaskManager tm = FindAnyObjectByType<TaskManager>();
+            if (tm != null) tm.CompleteCurrentTask();
         }
 
         private void TogglePlayerMovement(bool state)

@@ -7,13 +7,8 @@ public class TaskManager : MonoBehaviour
     public GameObject tasksPanel;
     public TextMeshProUGUI taskDisplay;
 
-    private List<string> allTasks = new List<string> {
-        "Встать с кровати (Клавиша C)",
-        "Собрать осколки картины (0/3)",
-        "Собрать картину",
-        "Найти брата"
-    };
-
+    // Список пустой по умолчанию, он заполняется динамически для каждой сцены
+    private List<string> allTasks = new List<string>();
     private int currentTaskIndex = 0;
     private int collectedPieces = 0;
 
@@ -25,12 +20,13 @@ public class TaskManager : MonoBehaviour
         }
     }
 
-    // МЕТОД ДЛЯ СМЕНЫ ЗАДАЧ НА СЦЕНЕ (Загружает сразу цепочку новых квестов)
+    // ЭТОТ МЕТОД ЗАПУСКАЕТСЯ ИЗ ДРУГИХ СКРИПТОВ ПРИ СТАРТЕ СЦЕНЫ
     public void SetSceneTasks(string[] newTasks)
     {
         allTasks.Clear();
         allTasks.AddRange(newTasks);
         currentTaskIndex = 0;
+        collectedPieces = 0; // Сбрасываем счетчик предметов для новой сцены
         UpdateTaskUI();
     }
 
@@ -43,10 +39,22 @@ public class TaskManager : MonoBehaviour
         }
     }
 
+    // Универсальный метод для квестов по поиску предметов (3 штуки)
     public void IncrementMirrorPieces()
     {
         collectedPieces++;
-        allTasks[1] = $"Собрать осколки зеркала ({collectedPieces}/3)";
+
+        // Автоматически обновляем вторую задачу (индекс 1) в списке, какая бы она ни была
+        if (allTasks.Count > 1)
+        {
+            // Берем чистый текст задачи (до скобок) и добавляем актуальный счетчик
+            string baseTaskText = allTasks[1];
+            if (baseTaskText.Contains("("))
+            {
+                baseTaskText = baseTaskText.Split('(')[0].Trim();
+            }
+            allTasks[1] = $"{baseTaskText} ({collectedPieces}/3)";
+        }
 
         if (collectedPieces >= 3)
         {
@@ -60,6 +68,8 @@ public class TaskManager : MonoBehaviour
 
     void UpdateTaskUI()
     {
+        if (taskDisplay == null) return;
+
         string text = "<b>ЗАДАЧИ:</b>\n\n";
         for (int i = 0; i <= currentTaskIndex; i++)
         {
@@ -73,7 +83,6 @@ public class TaskManager : MonoBehaviour
         taskDisplay.text = text;
     }
 
-    // Позволяет другим скриптам (например, дверям) узнать текущий прогресс по квестам
     public int GetCurrentTaskIndex()
     {
         return currentTaskIndex;
