@@ -18278,6 +18278,8 @@ MonoBehaviour:
   highlightColor: {r: 0.21176471, g: 0.21176471, b: 0.21176471, a: 0.8627451}
   sceneToLoad: "\u041F\u043E\u0434\u0432\u0430\u043B(\u043B\u043E\u043A\u0430\u0446\u0438\u044F
     \u21164)"
+  taskManager: {fileID: 1140842125}
+  requiredTaskIndex: 0
   doorAudioSource: {fileID: 1093748851}
   openDoorSound: {fileID: 8300000, guid: d2910b9b882a71040a030c4a4e5f00ac, type: 3}
 --- !u!61 &1093748848

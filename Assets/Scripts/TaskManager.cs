@@ -72,4 +72,10 @@ public class TaskManager : MonoBehaviour
         }
         taskDisplay.text = text;
     }
+
+    // ѕозвол€ет другим скриптам (например, двер€м) узнать текущий прогресс по квестам
+    public int GetCurrentTaskIndex()
+    {
+        return currentTaskIndex;
+    }
 }

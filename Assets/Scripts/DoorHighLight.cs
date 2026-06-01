@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections; // Добавлено для работы корутин
+using System.Collections;
 
 public class DoorHighlight : MonoBehaviour
 {
@@ -12,22 +12,55 @@ public class DoorHighlight : MonoBehaviour
     [SerializeField] private Color highlightColor = Color.gray;
     [SerializeField] private string sceneToLoad;
 
+    [Header("Проверка квеста (TaskManager)")]
+    [SerializeField] private TaskManager taskManager;
+    [Tooltip("Индекс задачи, при наступлении/выполнении которой дверь откроется. Например, для 'Починить зеркало' это индекс 2, а для его выполнения индекс должен стать 3.")]
+    [SerializeField] private int requiredTaskIndex = 3;
+
     [Header("Звуковые эффекты")]
-    [SerializeField] private AudioSource doorAudioSource; // Источник звука
-    [SerializeField] private AudioClip openDoorSound;     // Клип открытия двери
+    [SerializeField] private AudioSource doorAudioSource;
+    [SerializeField] private AudioClip openDoorSound;
 
     void Start()
     {
         _sr = GetComponent<SpriteRenderer>();
         _originalColor = _sr.color;
+
+        // Если забыли перетащить TaskManager в инспекторе, пытаемся найти его на сцене автоматически
+        if (taskManager == null)
+        {
+            taskManager = FindAnyObjectByType<TaskManager>();
+        }
     }
 
     void Update()
     {
+        // Проверяем состояние задачи динамически
+        CheckTaskCondition();
+
         if (_isUnlocked && _isPlayerInside && Input.GetKeyDown(KeyCode.E))
         {
-            // Запускаем корутину вместо прямого метода загрузки
             StartCoroutine(LoadSceneWithSoundRoutine());
+        }
+    }
+
+    private void CheckTaskCondition()
+    {
+        if (taskManager != null)
+        {
+            // Дверь разблокируется, если текущий индекс задачи равен или больше требуемого
+            if (taskManager.GetCurrentTaskIndex() >= requiredTaskIndex)
+            {
+                if (!_isUnlocked)
+                {
+                    UnlockDoor();
+                }
+            }
+            else
+            {
+                // Если задача ещё не готова, держим закрытой
+                _isUnlocked = false;
+            }
         }
     }
 
@@ -42,20 +75,16 @@ public class DoorHighlight : MonoBehaviour
 
     private IEnumerator LoadSceneWithSoundRoutine()
     {
-        // Выключаем коллайдер, чтобы игрок не нажал "Е" повторно во время задержки
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // Воспроизводим звук
         if (doorAudioSource != null && openDoorSound != null)
         {
             doorAudioSource.PlayOneShot(openDoorSound);
-            // Ждем длительность звукового файла перед сменой сцены
             yield return new WaitForSeconds(openDoorSound.length);
         }
         else
         {
-            // Если звука нет, ждем 0 кадров, чтобы не было ошибки
             yield return null;
         }
 
