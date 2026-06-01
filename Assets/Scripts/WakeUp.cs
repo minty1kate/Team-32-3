@@ -60,7 +60,7 @@ public class WakeUp : MonoBehaviour
 
         if (dialogueManager != null)
         {
-            dialogueManager.ShowMonologue("Герой\nГолова раскалывается... Почему в доме так темно? (Нажмите C, чтобы встать)", true);
+            dialogueManager.ShowMonologue("Голова раскалывается... Почему в доме так темно? (Нажмите C, чтобы встать)", true);
         }
     }
 
