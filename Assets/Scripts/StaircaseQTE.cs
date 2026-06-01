@@ -1,41 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement; // Обязательно для перезапуска сцены
-
-using UnityEngine;
-using UnityEngine.UI;
-
-using UnityEngine;
-using UnityEngine.UI;
-
-using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class StaircaseQTE : MonoBehaviour
 {
     [Header("Настройки QTE")]
-    public float TimeLimit = 5.0f; // Время в секундах на уничтожение рук
+    public float TimeLimit = 5.0f;
 
     [Header("Ссылки на объекты")]
     public GameObject PlayerObject;
-    public GameObject HandsGroup;  
+    public GameObject HandsGroup;
     public GameObject QteTextUI;
-    public Image BloodOverlay;     // Объект Red
+    public Image BloodOverlay;
+
+    [Header("Система Диалогов")]
+    [SerializeField] private DialogueManager dialogueManager;
 
     [Header("Настройки хаотичного движения рук")]
-    [SerializeField] private GameObject[] handPrefabs; 
-    [SerializeField] private float handMoveSpeed = 300f; 
+    [SerializeField] private GameObject[] handPrefabs;
+    [SerializeField] private float handMoveSpeed = 300f;
 
     [Header("Настройки пульсации крови")]
-    [SerializeField] private float pulseSpeed = 4f;       
-    [SerializeField] private float minAlpha = 0.2f;       
-    [SerializeField] private float maxAlpha = 0.6f;       
+    [SerializeField] private float pulseSpeed = 4f;
+    [SerializeField] private float minAlpha = 0.2f;
+    [SerializeField] private float maxAlpha = 0.6f;
 
     [Header("Настройки тряски ВСЕГО ЭКРАНА (Камеры)")]
-    [SerializeField] private float cameraShakeIntensity = 0.15f; // Сила дрожания экрана
-    [SerializeField] private float cameraShakeSpeed = 45f;       // Частота дрожания экрана
+    [SerializeField] private float cameraShakeIntensity = 0.15f;
+    [SerializeField] private float cameraShakeSpeed = 45f;
 
     private int activeHandsCount = 0;
     private float timer = 0f;
@@ -43,25 +36,23 @@ public class StaircaseQTE : MonoBehaviour
 
     private Vector2 minBounds;
     private Vector2 maxBounds;
-    
-    private bool hasTriggered = false; // Было ли QTE уже запущено ранее?
+
+    private bool hasTriggered = false;
     private static bool isPermanentlyPassed = false;
 
-    // Ссылки для управления камерой
     private Transform mainCameraTransform;
     private Vector3 originalCameraPosition;
 
     private void Start()
     {
-        // Находим основную камеру на сцене при старте
         if (Camera.main != null)
         {
             mainCameraTransform = Camera.main.transform;
         }
-        
+
         if (isPermanentlyPassed)
         {
-            gameObject.SetActive(false); // Полностью отключаем объект триггера лестницы
+            gameObject.SetActive(false);
         }
     }
 
@@ -70,7 +61,7 @@ public class StaircaseQTE : MonoBehaviour
         if (collision.CompareTag("Player") && !isQteActive && !hasTriggered)
         {
             hasTriggered = true;
-            StartQTE(); 
+            StartQTE();
         }
     }
 
@@ -78,13 +69,11 @@ public class StaircaseQTE : MonoBehaviour
     {
         if (handPrefabs == null || handPrefabs.Length == 0 || HandsGroup == null) return;
 
-        // Если камеру не нашли в Start, пробуем найти еще раз
         if (mainCameraTransform == null && Camera.main != null)
         {
             mainCameraTransform = Camera.main.transform;
         }
 
-        // Запоминаем точную позицию камеры ДО начала тряски
         if (mainCameraTransform != null)
         {
             originalCameraPosition = mainCameraTransform.position;
@@ -92,9 +81,8 @@ public class StaircaseQTE : MonoBehaviour
 
         timer = 0f;
         isQteActive = true;
-        activeHandsCount = handPrefabs.Length; 
+        activeHandsCount = handPrefabs.Length;
 
-        // 1. Останавливаем игрока
         if (PlayerObject != null)
         {
             MonoBehaviour[] scripts = PlayerObject.GetComponents<MonoBehaviour>();
@@ -106,16 +94,15 @@ public class StaircaseQTE : MonoBehaviour
             Rigidbody2D rb = PlayerObject.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.linearVelocity = Vector2.zero; 
-                rb.angularVelocity = 0f;          
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
             }
         }
 
-        // 2. Включаем UI
         if (HandsGroup != null) HandsGroup.SetActive(true);
         if (QteTextUI != null) QteTextUI.SetActive(true);
-        
-        if (BloodOverlay != null) 
+
+        if (BloodOverlay != null)
         {
             BloodOverlay.gameObject.SetActive(true);
             Color c = BloodOverlay.color;
@@ -124,12 +111,11 @@ public class StaircaseQTE : MonoBehaviour
 
         CalculateSpawnBounds();
 
-        // Очищаем старые руки
-        foreach (Transform child in HandsGroup.transform) {
+        foreach (Transform child in HandsGroup.transform)
+        {
             Destroy(child.gameObject);
         }
 
-        // Спавним 4 руки
         for (int i = 0; i < handPrefabs.Length; i++)
         {
             SpawnSpecificHand(handPrefabs[i]);
@@ -140,33 +126,28 @@ public class StaircaseQTE : MonoBehaviour
     {
         if (!isQteActive) return;
 
-        // 1. Ограничение по времени
         timer += Time.deltaTime;
         if (timer >= TimeLimit)
         {
             QteFailed();
-            return; 
+            return;
         }
 
-        // 2. Пульсация красного экрана через синус
         if (BloodOverlay != null)
         {
             float sinValue = Mathf.Sin(Time.time * pulseSpeed);
             float normalizedSin = (sinValue + 1f) / 2f;
             float targetAlpha = Mathf.Lerp(minAlpha, maxAlpha, normalizedSin);
-            
+
             Color c = BloodOverlay.color;
             BloodOverlay.color = new Color(c.r, c.g, c.b, targetAlpha);
         }
 
-        // 3. ТРЯСКА ВСЕГО ЭКРАНА (Смещение камеры по осям X и Y)
         if (mainCameraTransform != null)
         {
-            // Генерируем хаотичное, но плавное смещение с помощью Mathf.Sin
             float shakeX = Mathf.Sin(Time.time * cameraShakeSpeed) * cameraShakeIntensity;
             float shakeY = Mathf.Cos(Time.time * (cameraShakeSpeed * 1.1f)) * cameraShakeIntensity;
 
-            // Применяем смещение к исходной позиции камеры, не трогая глубину Z
             mainCameraTransform.position = originalCameraPosition + new Vector3(shakeX, shakeY, 0f);
         }
     }
@@ -178,8 +159,8 @@ public class StaircaseQTE : MonoBehaviour
             RectTransform rect = HandsGroup.GetComponent<RectTransform>();
             Vector3[] corners = new Vector3[4];
             rect.GetLocalCorners(corners);
-            minBounds = corners[0]; 
-            maxBounds = corners[2]; 
+            minBounds = corners[0];
+            maxBounds = corners[2];
         }
     }
 
@@ -189,13 +170,14 @@ public class StaircaseQTE : MonoBehaviour
         RectTransform handRect = newHand.GetComponent<RectTransform>();
         handRect.anchoredPosition = new Vector2(Random.Range(minBounds.x, maxBounds.x), Random.Range(minBounds.y, maxBounds.y));
 
+        // Добавляем внутренний класс, который написан ниже
         MovingHandTarget handScript = newHand.AddComponent<MovingHandTarget>();
         handScript.Setup(this, handMoveSpeed, minBounds, maxBounds);
     }
 
     public void OnHandClicked()
     {
-        activeHandsCount--; 
+        activeHandsCount--;
 
         if (activeHandsCount <= 0)
         {
@@ -207,8 +189,7 @@ public class StaircaseQTE : MonoBehaviour
     {
         isQteActive = false;
         isPermanentlyPassed = true;
-        
-        // Возвращаем камеру строго в исходную точку
+
         if (mainCameraTransform != null)
         {
             mainCameraTransform.position = originalCameraPosition;
@@ -218,23 +199,49 @@ public class StaircaseQTE : MonoBehaviour
         if (BloodOverlay != null) BloodOverlay.gameObject.SetActive(false);
         if (QteTextUI != null) QteTextUI.SetActive(false);
 
-        if (PlayerObject != null)
+        if (dialogueManager != null)
         {
-            MonoBehaviour[] scripts = PlayerObject.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
+            string[] linesAfterQTE = new string[]
             {
-                script.enabled = true; 
+                "Что это было?! Эти руки тянулись ко мне со всех сторон...",
+                "Но почему... почему от их прикосновений мне стало так невыносимо тепло?",
+                "Это... это кольцо на пальце... Оно точь-в-точь как у моей мамы.",
+                "Нет, это бред! Она жива, она не может быть одной из этих призрачных тварей..."
+            };
+
+            dialogueManager.StartTutorial(linesAfterQTE);
+
+            if (dialogueManager.closeButton != null)
+            {
+                dialogueManager.closeButton.onClick.RemoveAllListeners();
+                dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                dialogueManager.closeButton.onClick.AddListener(EnablePlayerMovement);
             }
         }
+        else
+        {
+            EnablePlayerMovement();
+        }
 
-        Debug.Log("QTE Успешно пройдено!");
+        Debug.Log("QTE Успешно пройдено! Запущен диалог.");
+    }
+
+    public void EnablePlayerMovement()
+    {
+        if (PlayerObject != null)
+        {
+            Player_Movement movement = PlayerObject.GetComponent<Player_Movement>();
+            if (movement != null)
+            {
+                movement.enabled = true;
+            }
+        }
     }
 
     private void QteFailed()
     {
         isQteActive = false;
-        
-        // Возвращаем камеру в норму перед перезапуском
+
         if (mainCameraTransform != null)
         {
             mainCameraTransform.position = originalCameraPosition;
@@ -244,13 +251,12 @@ public class StaircaseQTE : MonoBehaviour
         if (BloodOverlay != null) BloodOverlay.gameObject.SetActive(false);
         if (QteTextUI != null) QteTextUI.SetActive(false);
 
-        // Перезагрузка сцены
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
     }
 }
 
-// (Вспомогательный класс MovingHandTarget ниже)
+// ВТОРОЙ КЛАСС В ЭТОМ ЖЕ ФАЙЛЕ (НЕ УДАЛЯЙТЕ ЕГО)
 public class MovingHandTarget : MonoBehaviour
 {
     private StaircaseQTE qteManager;
@@ -274,7 +280,7 @@ public class MovingHandTarget : MonoBehaviour
 
         Button btn = GetComponent<Button>();
         if (btn == null) btn = gameObject.AddComponent<Button>();
-        
+
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(Clicked);
     }
@@ -308,6 +314,6 @@ public class MovingHandTarget : MonoBehaviour
     private void Clicked()
     {
         if (qteManager != null) qteManager.OnHandClicked();
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
 }

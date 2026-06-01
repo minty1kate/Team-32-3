@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MirrorClothGame : MonoBehaviour
 {
     [Header("UI элементы")]
     [SerializeField] private Slider clothSlider;        
     [SerializeField] private TableTrigger tableTrigger; 
+
+    [Header("Система Диалогов")]
+    [SerializeField] private DialogueManager dialogueManager; // Ссылка на менеджер диалогов
 
     [Header("Настройки механики")]
     [SerializeField] private float baseResistance = 0.4f; 
@@ -46,7 +50,6 @@ public class MirrorClothGame : MonoBehaviour
 
         activationTimer += Time.deltaTime;
 
-        // 1. Логика хаотичного призрачного ветра
         windTimer += Time.deltaTime;
         if (windTimer >= windFrequencyCurrent)
         {
@@ -57,27 +60,21 @@ public class MirrorClothGame : MonoBehaviour
 
         currentWindPulse = Mathf.MoveTowards(currentWindPulse, 0f, Time.deltaTime * 1.5f);
 
-        // 2. Считываем относительное движение мыши ВВЕРХ
         if (Input.GetMouseButton(0) && activationTimer > 0.3f)
         {
             float mouseY = Input.GetAxis("Mouse Y"); 
 
-            // ИЗМЕНЕНО: Если mouseY положительный — значит мышь движется ВВЕРХ
             if (mouseY > 0f)
             {
                 isHolding = true;
-
-                // Переводим сдвиг мыши в скорость
                 float moveSpeed = Mathf.Abs(mouseY) * pullSensitivity;
 
-                // Проверяем на слишком резкий рывок
                 if (moveSpeed / Time.deltaTime > maxSafeSpeed * 100f)
                 {
                     BreakGrip();
                 }
                 else
                 {
-                    // Двигаем ткань (уменьшаем значение от 1 к 0)
                     clothSlider.value -= moveSpeed;
                 }
             }
@@ -91,7 +88,6 @@ public class MirrorClothGame : MonoBehaviour
             isHolding = false; 
         }
 
-        // 3. Силы, тянущие ткань обратно наверх (в сторону 1)
         float totalBackwardsForce = baseResistance + currentWindPulse;
         
         if (!isHolding && clothSlider.value < 1f)
@@ -105,7 +101,6 @@ public class MirrorClothGame : MonoBehaviour
 
         clothSlider.value = Mathf.Clamp01(clothSlider.value);
 
-        // 4. ПРОВЕРКА ПОБЕДЫ
         if (clothSlider.value <= 0.01f)
         {
             WinGame();
@@ -127,11 +122,11 @@ public class MirrorClothGame : MonoBehaviour
         StartCoroutine(WaitAndCloseScreen());
     }
 
-    private System.Collections.IEnumerator WaitAndCloseScreen()
+    private IEnumerator WaitAndCloseScreen()
     {
         if (clothSlider != null) clothSlider.interactable = false;
 
-        // 1. Ждем 3 секунды, пока игрок смотрит в пустое зеркало
+        // Ждем 3 секунды, пока игрок смотрит в пустое зеркало
         yield return new WaitForSeconds(3.0f);
 
         // Закрываем окно мини-игры с зеркалом
@@ -139,53 +134,72 @@ public class MirrorClothGame : MonoBehaviour
         if (parentCanvas != null) parentCanvas.gameObject.SetActive(false);
         else gameObject.SetActive(false);
 
-        // 2. ВЫВОД ФИНАЛЬНОЙ ФРАЗЫ ГЕРОЯ
-        // (Сюда вы можете подключить вашу собственную систему диалогов, например: DialogueManager.ShowText("...");)
-        Debug.Log("Мысли ГГ: Господи... я вижу стены сквозь собственные ладони... Это не они призраки... Это я... Меня больше нет.");
-        
-        // Делаем паузу, чтобы игрок успел прочесть финальные слова перед исчезновением
-        yield return new WaitForSeconds(4.0f); 
+        // ЗАПУСК ИТОГОВОГО МОНОЛОГА
+        if (dialogueManager != null)
+        {
+            string[] linesAfterMirror = new string[]
+            {
+                "Где я? Почему там... только пустая комната?",
+                "Пожалуйста, пусть это будет сном... проснись... ПРОСНИСЬ!",
+                "Господи... я вижу доски пола сквозь собственные ладони...",
+                "Я... пропадаю... меня здесь нет"
+            };
 
-        // 3. ПЛАВНОЕ ИСЧЕЗНОВЕНИЕ (РАСТВОРЕНИЕ) ПЕРСОНАЖА
+            // Блокируем скрипт движения перед выводом текста
+            if (tableTrigger != null && tableTrigger.GetPlayerObject() != null)
+            {
+                Player_Movement movement = tableTrigger.GetPlayerObject().GetComponent<Player_Movement>();
+                if (movement != null) movement.enabled = false;
+            }
+
+            dialogueManager.StartTutorial(linesAfterMirror);
+
+            // Настраиваем кнопку закрытия, чтобы запустить исчезновение персонажа
+            if (dialogueManager.closeButton != null)
+            {
+                dialogueManager.closeButton.onClick.RemoveAllListeners();
+                dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                dialogueManager.closeButton.onClick.AddListener(StartPlayerFade);
+            }
+        }
+        else
+        {
+            StartPlayerFade();
+        }
+    }
+
+    private void StartPlayerFade()
+    {
+        StartCoroutine(FadePlayerAndLoadEndScene());
+    }
+
+    private IEnumerator FadePlayerAndLoadEndScene()
+    {
+        // ПЛАВНОЕ ИСЧЕЗНОВЕНИЕ (РАСТВОРЕНИЕ) ПЕРСОНАЖА ПОВЕРХ ЗАКРЫТОГО ДИАЛОГА
         if (tableTrigger != null && tableTrigger.GetPlayerObject() != null)
         {
-            // Получаем объект игрока из скрипта триггера
             GameObject playerObj = tableTrigger.GetPlayerObject();
-
-            // Ищем компонент SpriteRenderer на вашем герое (исправлена опечатка с буквой 'd')
             SpriteRenderer playerSprite = playerObj.GetComponent<SpriteRenderer>();
             
             if (playerSprite != null)
             {
-                float fadeDuration = 3.0f; // Время в секундах, за которое герой полностью растает
+                float fadeDuration = 3.0f; 
                 float startAlpha = playerSprite.color.a;
 
                 for (float t = 0; t < fadeDuration; t += Time.deltaTime)
                 {
-                    // Вычисляем текущую прозрачность от начальной до нуля
                     float normalizedTime = t / fadeDuration;
                     float newAlpha = Mathf.Lerp(startAlpha, 0f, normalizedTime);
 
-                    // Применяем новый альфа-канал к спрайту героя, не меняя его цвет
                     playerSprite.color = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, newAlpha);
-                    
-                    yield return null; // Ждем следующего кадра [Unity Coroutines]
+                    yield return null; 
                 }
 
-                // В самый конец принудительно выставляем чистый ноль (полная невидимость)
                 playerSprite.color = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0f);
             }
         }
 
-
-        // Небольшая жуткая пауза в полной темноте/пустоте подвала перед титрами
         yield return new WaitForSeconds(1.5f);
-
-        // 4. ПЕРЕХОД НА ЭКРАН КОНЦОВКИ ИГРЫ
-        // Замените "EndGameScene" на точное имя вашей сцены с титрами или главным меню
         UnityEngine.SceneManagement.SceneManager.LoadScene("Финал"); 
     }
 }
-
-
-

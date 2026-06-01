@@ -4,22 +4,24 @@ using UnityEngine.UI;
 public class GhostHandGame : MonoBehaviour
 {
     [Header("UI элементы")]
-    [SerializeField] private Slider uiSlider;          // Ссылка на компонент Slider
-    [SerializeField] private RectTransform greenZone;   // Визуальная зеленая зона (чтобы менять её размер)
-    [SerializeField] private TableTrigger tableTrigger; // Ссылка на первый скрипт для завершения
+    [SerializeField] private Slider uiSlider;
+    [SerializeField] private RectTransform greenZone;
+    [SerializeField] private TableTrigger tableTrigger;
+
+    [Header("Система Диалогов")]
+    [SerializeField] private DialogueManager dialogueManager;
 
     [Header("Настройки визуала газеты")]
-    [SerializeField] private Image newspaperImageUI;   // Ссылка на картинку газеты на Canvas
+    [SerializeField] private Image newspaperImageUI;
     [SerializeField] private Sprite[] newspaperSprites;
-    
+
     [Header("Настройки механики")]
     [SerializeField] private float currentSpeed = 2.5f;
     [SerializeField] private float phase1Speed = 2.5f;
     [SerializeField] private float phase2Speed = 4.5f;
     [SerializeField] private float phase3Speed = 6.5f;
-    public static bool isNewspaperPassed = false; 
-    
-    // Границы зеленой зоны (в диапазоне от -1 до 1 слайдера)
+    public static bool isNewspaperPassed = false;
+
     private float greenMin = -0.1f;
     private float greenMax = 0.1f;
 
@@ -27,28 +29,28 @@ public class GhostHandGame : MonoBehaviour
     private int direction = 1;
     private int currentPhase = 1;
     private bool isAnimating = false;
+    private bool isDialogueActive = false; // Блокировка ползунка во время промежуточных монологов
 
     private void OnEnable()
     {
-        // Сброс параметров при каждом открытии окна
         sliderValue = 0f;
         currentPhase = 1;
         currentSpeed = phase1Speed;
         greenMin = -0.1f;
         greenMax = 0.1f;
         isAnimating = false;
-        
+        isDialogueActive = false;
+
         UpdateGreenZoneVisual();
         UpdateNewspaperSprite();
     }
 
     private void Update()
     {
-        if (isAnimating) return;
+        if (isAnimating || isDialogueActive) return;
 
-        // 1. Движение ползунка туда-сюда
         sliderValue += direction * currentSpeed * Time.deltaTime;
-        
+
         if (sliderValue >= 1f)
         {
             sliderValue = 1f;
@@ -62,7 +64,6 @@ public class GhostHandGame : MonoBehaviour
 
         uiSlider.value = sliderValue;
 
-        // 2. Клик ЛКМ
         if (Input.GetMouseButtonDown(0))
         {
             if (sliderValue >= greenMin && sliderValue <= greenMax)
@@ -82,19 +83,16 @@ public class GhostHandGame : MonoBehaviour
 
         if (currentPhase == 1)
         {
-            // ЭТАП 1: Рука проходит сквозь газету в первый раз
             Debug.Log("Фаза 1: Успешный клик. Рука прошла сквозь газету.");
-            Invoke(nameof(ToPhase2), 1.5f); // Задержка на анимацию/эффект
+            Invoke(nameof(ShowPhase1Dialogue), 1.0f);
         }
         else if (currentPhase == 2)
         {
-            // ЭТАП 2: Вторая попытка, рука снова не может ухватиться или газета выскальзывает
             Debug.Log("Фаза 2: Успешный клик. Газета всё ещё не поддаётся!");
-            Invoke(nameof(ToPhase3), 1.5f); // Переходим к финальному этапу
+            Invoke(nameof(ShowPhase2Dialogue), 1.0f);
         }
         else if (currentPhase == 3)
         {
-            // ЭТАП 3: Финальный триумф, превозмогая призрачную немощь, ГГ берёт газету
             Debug.Log("Фаза 3: Финальный клик! Газета успешно взята в руки.");
             Invoke(nameof(FinishGame), 1.0f);
         }
@@ -102,89 +100,165 @@ public class GhostHandGame : MonoBehaviour
 
     private void MissClick()
     {
-        // Здесь можно запустить анимацию дрожания руки от неудачной попытки
         Debug.Log("Промах по шкале!");
+    }
+
+    // --- ДИАЛОГ ПОСЛЕ 1 ФАЗЫ ---
+    private void ShowPhase1Dialogue()
+    {
+        if (dialogueManager != null)
+        {
+            isDialogueActive = true;
+            string[] lines = new string[]
+            {
+                "Я... я не чувствую бумаги.",
+                "Пальцы прошли сквозь нее, как сквозь дым...",
+                "Что со мной?"
+            };
+
+            dialogueManager.StartTutorial(lines);
+
+            if (dialogueManager.closeButton != null)
+            {
+                dialogueManager.closeButton.onClick.RemoveAllListeners();
+                dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                dialogueManager.closeButton.onClick.AddListener(ToPhase2); // По кнопке закрыть переходим к фазе 2
+            }
+        }
+        else
+        {
+            ToPhase2();
+        }
     }
 
     private void ToPhase2()
     {
         currentPhase = 2;
-        currentSpeed = phase2Speed; // Ползунок ускоряется
-        
-        // Сужаем зону для второго этапа
+        currentSpeed = phase2Speed;
+
         greenMin = -0.07f;
         greenMax = 0.07f;
-        
+
         UpdateGreenZoneVisual();
         UpdateNewspaperSprite();
-        Debug.Log("Мысли ГГ (Фаза 2): Что за чертовщина?.. Я её не чувствую!");
-        
+
         isAnimating = false;
+        isDialogueActive = false; // Запускаем ползунок снова
+    }
+
+    // --- ДИАЛОГ ПОСЯЛЕ 2 ФАЗЫ ---
+    private void ShowPhase2Dialogue()
+    {
+        if (dialogueManager != null)
+        {
+            isDialogueActive = true;
+            string[] lines = new string[]
+            {
+                "Проклятый дом сводит меня с ума!",
+                "Мне нужно прочесть... нужно взять газету!"
+            };
+
+            dialogueManager.StartTutorial(lines);
+
+            if (dialogueManager.closeButton != null)
+            {
+                dialogueManager.closeButton.onClick.RemoveAllListeners();
+                dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                dialogueManager.closeButton.onClick.AddListener(ToPhase3); // По кнопке закрыть переходим к фазе 3
+            }
+        }
+        else
+        {
+            ToPhase3();
+        }
     }
 
     private void ToPhase3()
     {
         currentPhase = 3;
-        currentSpeed = phase3Speed; // Ползунок летит очень быстро!
-        
-        // Экстремально сужаем зону для финального этапа (сложно промахнуться)
+        currentSpeed = phase3Speed;
+
         greenMin = -0.04f;
         greenMax = 0.04f;
-        
+
         UpdateGreenZoneVisual();
         UpdateNewspaperSprite();
-        Debug.Log("Мысли ГГ (Фаза 3): Ну же! Соберись! Возьми её!");
-        
+
         isAnimating = false;
+        isDialogueActive = false; // Запускаем ползунок снова
     }
 
+    // --- ФИНАЛ МИНИ-ИГРЫ ---
     private void FinishGame()
     {
         isNewspaperPassed = true;
         gameObject.SetActive(false);
 
-        // Также вызываем метод у триггера стола, чтобы он знал, что игра завершена
         if (tableTrigger != null)
         {
             tableTrigger.EndMiniGameAndOpenNewspaper();
         }
 
-        Debug.Log("Мини-игра закрыта. Сюда можно подключать показ финальных фраз героя.");
+        if (dialogueManager != null)
+        {
+            string[] linesAfterGame = new string[]
+            {
+                "Это... моё лицо на снимке?",
+                "Какая глупая шутка... Я ведь стою здесь!",
+                "Нет-нет-нет, это не могу быть я.",
+                "Зеркало... надо посмотреть в зеркало, оно под тканью.."
+            };
+
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                Player_Movement movement = player.GetComponent<Player_Movement>();
+                if (movement != null) movement.enabled = false;
+            }
+
+            dialogueManager.StartTutorial(linesAfterGame);
+
+            if (dialogueManager.closeButton != null)
+            {
+                dialogueManager.closeButton.onClick.RemoveAllListeners();
+                dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                dialogueManager.closeButton.onClick.AddListener(EnablePlayerMovement);
+            }
+        }
+    }
+
+    private void EnablePlayerMovement()
+    {
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            Player_Movement movement = player.GetComponent<Player_Movement>();
+            if (movement != null) movement.enabled = true;
+        }
     }
 
     private void UpdateGreenZoneVisual()
     {
         if (greenZone != null && uiSlider != null)
         {
-            // Получаем полную ширину всей шкалы слайдера в пикселях
             float totalWidth = uiSlider.GetComponent<RectTransform>().rect.width;
-        
-            // Рассчитываем долю, которую должна занимать зона (из диапазона шкалы от -1 до 1, то есть всего 2 единицы)
-            float zoneShare = (greenMax - greenMin) / 2f; 
-        
-            // Меняем ТОЛЬКО ширину (X). Высоту (Y) оставляем ровно такой, какую вы задали в редакторе!
+            float zoneShare = (greenMax - greenMin) / 2f;
             greenZone.sizeDelta = new Vector2(totalWidth * zoneShare, greenZone.sizeDelta.y);
-        
-            // Принудительно сбрасываем позицию зеленой зоны строго по центру
             greenZone.anchoredPosition = Vector2.zero;
         }
     }
-    
+
     [Header("Масштаб газеты")]
-    [Range(0.1f, 2f)] [SerializeField] private float newspaperScale = 1.0f; // Ползунок размера в инспекторе
+    [Range(0.1f, 2f)][SerializeField] private float newspaperScale = 1.0f;
 
     private void UpdateNewspaperSprite()
     {
         if (newspaperImageUI != null && newspaperSprites != null && newspaperSprites.Length >= 3)
         {
-            // Устанавливаем нужный спрайт
             newspaperImageUI.sprite = newspaperSprites[currentPhase - 1];
-            
-            // Вместо SetNativeSize задаем масштаб через RectTransform
             RectTransform rect = newspaperImageUI.GetComponent<RectTransform>();
             if (rect != null)
             {
-                // Устанавливаем одинаковый масштаб по осям X и Y
                 rect.localScale = new Vector3(newspaperScale, newspaperScale, 1f);
             }
         }
