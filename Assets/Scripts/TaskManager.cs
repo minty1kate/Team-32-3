@@ -9,8 +9,8 @@ public class TaskManager : MonoBehaviour
 
     private List<string> allTasks = new List<string> {
         "Встать с кровати (Клавиша C)",
-        "Собрать осколки зеркала (0/3)",
-        "Починить зеркало",
+        "Собрать осколки картины (0/3)",
+        "Собрать картину",
         "Найти брата"
     };
 
