@@ -13,39 +13,40 @@ namespace DefaultNamespace
         }
         public ParticleSystem _ps;
 
-        [Header("Настройки этапа")] 
-        public StepType currentStep; // Выберите тип триггера в инспекторе для каждого объекта
+        [Header("Настройки этапа")]
+        public StepType currentStep;
+
+        [Header("Система Диалогов")]
+        [SerializeField] private DialogueManager dialogueManager;
 
         [Header("Настройки графики")]
-        public GameObject blackOverlay; // Черный фон на весь экран (нужен для FirstStep)
+        public GameObject blackOverlay;
 
         [Header("Настройки графики (2 этап)")]
-        public SpriteRenderer paintingRenderer; // Ссылка на спрайт картины на стене
+        public SpriteRenderer paintingRenderer;
         public Color glowColor = new Color(1f, 0.5f, 1f, 1f);
-        
+
         [Header("Настройки графики (2 этап)")]
         public GameObject backgroundObject;
-        
-        [Header("Ссылки на NPC")] 
-        public NPCMovement npcScript; // Ссылка на скрипт NPC
-        public Transform exitPoint;   // Точка побега (нужна только для второго триггера)
 
-        [Header("Подсказка")] 
-        public GameObject hintObject;  // Объект надписи "Нажми E"
+        [Header("Ссылки на NPC")]
+        public NPCMovement npcScript;
+        public Transform exitPoint;
+
+        [Header("Подсказка")]
+        public GameObject hintObject;
 
         [Header("Настройки Пятнашек (для этапа ThirdStep_Puzzle)")]
         [SerializeField] private GameObject puzzleWindow;
-        
-        private bool _canInteract = false;    // Находится ли игрок в зоне
-        private bool _eventTriggered = false; // Защита от повторного нажатия
 
-        // Глобальный флаг-замок: проверяет, завершился ли первый этап
+        private bool _canInteract = false;
+        private bool _eventTriggered = false;
+
         public static bool IsFirstStepCompleted { get; private set; } = false;
         public static bool IsPuzzleCompleted { get; private set; } = false;
 
         void Start()
         {
-            // Сбрасываем состояние при перезапуске сцены
             if (currentStep == StepType.FirstStep_Rotate)
             {
                 IsFirstStepCompleted = false;
@@ -57,7 +58,6 @@ namespace DefaultNamespace
         {
             if (_canInteract && Input.GetKeyDown(KeyCode.E))
             {
-                // Если это второй шаг, кнопка сработает только после выполнения первого шага
                 if (currentStep == StepType.SecondStep_Puzzle && !IsFirstStepCompleted)
                 {
                     Debug.Log($"Нажата Е! Текущий шаг объекта: {currentStep}. Свет выключен: {IsFirstStepCompleted}");
@@ -70,7 +70,7 @@ namespace DefaultNamespace
                     return;
                 }
 
-                if (_canInteract && Input.GetKeyDown(KeyCode.E) && !_eventTriggered)
+                if (!_eventTriggered)
                 {
                     Debug.Log("Все проверки пройдены successfully! Запускаю корутину.");
                     StartCoroutine(ExecuteStep());
@@ -82,76 +82,168 @@ namespace DefaultNamespace
         {
             if (hintObject != null) hintObject.SetActive(false);
 
-            // ЛОГИКА ДЛЯ ПЕРВОГО ТРИГГЕРА (Мигание света + Кручение NPC)
             if (currentStep == StepType.FirstStep_Rotate)
             {
                 _eventTriggered = true;
-                // 1. Включаем темноту
+
                 if (blackOverlay != null) blackOverlay.SetActive(true);
-
-                // 2. Ждем 2 секунды в темноте
                 yield return new WaitForSeconds(2f);
-
-                // 3. Выключаем темноту
                 if (blackOverlay != null) blackOverlay.SetActive(false);
 
-                // Пауза перед реакцией NPC
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(0.5f);
 
-                // 4. NPC начинает вертеться
                 if (npcScript != null)
                 {
                     npcScript.StartConfused();
                 }
 
-                // Открываем замок для второго триггера
-                IsFirstStepCompleted = true;
+                yield return new WaitForSeconds(1f);
+
+                if (dialogueManager != null)
+                {
+                    TogglePlayerMovement(false);
+
+                    string[] lightDialogue = new string[]
+                    {
+                        "Я проскочил прямо у него перед носом, а он даже не повернулся...",
+                        "Но что это за жуткая картина на стене? Раньше её здесь не было!",
+                        "Этот чернокнижник запечатывает мою душу в холст!"
+                    };
+
+                    dialogueManager.StartTutorial(lightDialogue);
+
+                    if (dialogueManager.closeButton != null)
+                    {
+                        dialogueManager.closeButton.onClick.RemoveAllListeners();
+                        dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                        dialogueManager.closeButton.onClick.AddListener(OnFirstStepDialogueFinished);
+                    }
+                }
+                else
+                {
+                    OnFirstStepDialogueFinished();
+                }
             }
             else if (currentStep == StepType.SecondStep_Puzzle)
             {
                 if (puzzleWindow != null)
                 {
-                    puzzleWindow.SetActive(true); // Включаем UI пятнашек
+                    puzzleWindow.SetActive(true);
                 }
-                
-                // ВАЖНО: мы НЕ ставим тут флаг IsPuzzleCompleted = true. 
-                // Его поставит сам менеджер пятнашек, ТОЛЬКО когда игрок выиграет!
             }
-            // ЛОГИКА ДЛЯ ВТОРОГО ТРИГГЕРА (NPC убегает)
+            // ЛОГИКА КОГДА УРОНИЛИ КНИЖКИ (NPC убегает)
             else if (currentStep == StepType.FinalStep_RunAway)
             {
+                _eventTriggered = true; // Защита от повторного падения книг
+
                 if (backgroundObject != null)
                 {
-                    backgroundObject.SetActive(false);
+                    backgroundObject.SetActive(false); // Шкаф падает/исчезает, книги летят
                 }
-                
+
                 yield return new WaitForSeconds(0.2f);
 
                 if (npcScript != null)
                 {
-                    npcScript.StartFeeling(exitPoint);
+                    npcScript.StartFeeling(exitPoint); // Брат в ужасе убегает
+                }
+
+                // Небольшая пауза, чтобы игрок успел проводить взглядом убегающего брата
+                yield return new WaitForSeconds(1.5f);
+
+                // ЗАПУСК МОНОЛОГА ПОСЛЕ ПОБЕГА БРАТА И ГРОХОТА КНИГ
+                if (dialogueManager != null)
+                {
+                    TogglePlayerMovement(false);
+
+                    string[] runAwayDialogue = new string[]
+                    {
+                        "Да! Получилось! Уноси свои ноги, расхититель чужих жизней!",
+                        "Гримуары на полу, проклятый круг разорван... Дом снова принадлежит мне.",
+                        "*Грохот из глубины коридора*",
+                        "Погоди... А это еще что за чертовщина? Звук шел со стороны кухни...",
+                        "Будто там кто-то яростно скребется по кафелю... Надо проверить."
+                    };
+
+                    dialogueManager.StartTutorial(runAwayDialogue);
+
+                    if (dialogueManager.closeButton != null)
+                    {
+                        dialogueManager.closeButton.onClick.RemoveAllListeners();
+                        dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                        dialogueManager.closeButton.onClick.AddListener(OnFinalDialogueFinished);
+                    }
+                }
+                else
+                {
+                    OnFinalDialogueFinished();
                 }
             }
         }
-        
+
+        private void OnFirstStepDialogueFinished()
+        {
+            TogglePlayerMovement(true);
+            IsFirstStepCompleted = true;
+        }
+
         public void CompletePuzzleStep()
         {
             _eventTriggered = true;
             IsPuzzleCompleted = true;
             Debug.Log("Доступ к финальному испугу открыт!");
-            
+
             if (paintingRenderer != null)
             {
                 paintingRenderer.color = glowColor;
                 _ps.Play();
             }
 
-            // 2. Заставляем NPC крутиться ЕЩЕ быстрее
             if (npcScript != null)
             {
-                // Для этого в вашем скрипте NPCMovement должна быть функция увеличения скорости.
-                // Ниже мы добавим её поддержку.
-                npcScript.Invoke("MakeRotationFaster", 0.5f); 
+                npcScript.MakeRotationFaster();
+            }
+
+            if (dialogueManager != null)
+            {
+                TogglePlayerMovement(false);
+
+                string[] puzzleDialogue = new string[]
+                {
+                    "И эти книги на полках... Они подпитывают его проклятие, я кожей чувствую их энергию!",
+                    "Нет... я не позволю разрушить мой дом!",
+                    "Я разорву этот круг, я вышвырну все его черные гримуары из шкафа!"
+                };
+
+                dialogueManager.StartTutorial(puzzleDialogue);
+
+                if (dialogueManager.closeButton != null)
+                {
+                    dialogueManager.closeButton.onClick.RemoveAllListeners();
+                    dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
+                    dialogueManager.closeButton.onClick.AddListener(OnPuzzleDialogueFinished);
+                }
+            }
+        }
+
+        private void OnPuzzleDialogueFinished()
+        {
+            TogglePlayerMovement(true);
+        }
+
+        private void OnFinalDialogueFinished()
+        {
+            TogglePlayerMovement(true);
+            // Тут можно открыть дверь на кухню или сменить квест в TaskManager
+        }
+
+        private void TogglePlayerMovement(bool state)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                Player_Movement movement = player.GetComponent<Player_Movement>();
+                if (movement != null) movement.enabled = state;
             }
         }
 
@@ -159,7 +251,6 @@ namespace DefaultNamespace
         {
             if (other.CompareTag("Player") && !_eventTriggered)
             {
-                // Если это второй триггер, не даем войти в него, пока не нажат первый
                 if (currentStep == StepType.SecondStep_Puzzle && !IsFirstStepCompleted) return;
                 if (currentStep == StepType.FinalStep_RunAway && !IsPuzzleCompleted) return;
 
