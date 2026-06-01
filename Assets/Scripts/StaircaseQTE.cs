@@ -125,6 +125,15 @@ public class StaircaseQTE : MonoBehaviour
     private void Update()
     {
         if (!isQteActive) return;
+        
+        // --- ЧИТ-КОД ---
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Активирован чит-код: мгновенное прохождение QTE с руками.");
+            QteSuccess();
+            return;
+        }
+        // ----------------
 
         timer += Time.deltaTime;
         if (timer >= TimeLimit)

@@ -25,6 +25,34 @@ namespace DefaultNamespace
             CreatePuzzle();
             ShuffleTiles();
         }
+        
+        // --- ЧИТ-КОД ---
+        void Update()
+        {
+            // Если нажата клавиша T, автоматически собираем пазл
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                SolvePuzzleCheat();
+            }
+        }
+
+        void SolvePuzzleCheat()
+        {
+            Debug.Log("Активирован чит-код: автоматическая сборка пазла.");
+            
+            // Расставляем все плитки по их правильным индексам в UI
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                Puzzle tileScript = tiles[i].GetComponent<Puzzle>();
+                if (tileScript != null)
+                {
+                    tiles[i].transform.SetSiblingIndex(tileScript.correctIndex);
+                }
+            }
+
+            // Запускаем стандартную логику победы
+            OnWin();
+        }
 
         void CreatePuzzle()
         {
