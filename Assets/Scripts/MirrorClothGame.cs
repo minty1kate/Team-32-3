@@ -129,22 +129,61 @@ public class MirrorClothGame : MonoBehaviour
 
     private System.Collections.IEnumerator WaitAndCloseScreen()
     {
+        if (clothSlider != null) clothSlider.interactable = false;
+
+        // 1. Ждем 3 секунды, пока игрок смотрит в пустое зеркало
         yield return new WaitForSeconds(3.0f);
 
+        // Закрываем окно мини-игры с зеркалом
         Canvas parentCanvas = GetComponentInParent<Canvas>();
-        if (parentCanvas != null)
+        if (parentCanvas != null) parentCanvas.gameObject.SetActive(false);
+        else gameObject.SetActive(false);
+
+        // 2. ВЫВОД ФИНАЛЬНОЙ ФРАЗЫ ГЕРОЯ
+        // (Сюда вы можете подключить вашу собственную систему диалогов, например: DialogueManager.ShowText("...");)
+        Debug.Log("Мысли ГГ: Господи... я вижу стены сквозь собственные ладони... Это не они призраки... Это я... Меня больше нет.");
+        
+        // Делаем паузу, чтобы игрок успел прочесть финальные слова перед исчезновением
+        yield return new WaitForSeconds(4.0f); 
+
+        // 3. ПЛАВНОЕ ИСЧЕЗНОВЕНИЕ (РАСТВОРЕНИЕ) ПЕРСОНАЖА
+        if (tableTrigger != null && tableTrigger.GetPlayerObject() != null)
         {
-            parentCanvas.gameObject.SetActive(false);
-        }
-        else
-        {
-            gameObject.SetActive(false); 
+            // Получаем объект игрока из скрипта триггера
+            GameObject playerObj = tableTrigger.GetPlayerObject();
+
+            // Ищем компонент SpriteRenderer на вашем герое (исправлена опечатка с буквой 'd')
+            SpriteRenderer playerSprite = playerObj.GetComponent<SpriteRenderer>();
+            
+            if (playerSprite != null)
+            {
+                float fadeDuration = 3.0f; // Время в секундах, за которое герой полностью растает
+                float startAlpha = playerSprite.color.a;
+
+                for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+                {
+                    // Вычисляем текущую прозрачность от начальной до нуля
+                    float normalizedTime = t / fadeDuration;
+                    float newAlpha = Mathf.Lerp(startAlpha, 0f, normalizedTime);
+
+                    // Применяем новый альфа-канал к спрайту героя, не меняя его цвет
+                    playerSprite.color = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, newAlpha);
+                    
+                    yield return null; // Ждем следующего кадра [Unity Coroutines]
+                }
+
+                // В самый конец принудительно выставляем чистый ноль (полная невидимость)
+                playerSprite.color = new Color(playerSprite.color.r, playerSprite.color.g, playerSprite.color.b, 0f);
+            }
         }
 
-        if (tableTrigger != null)
-        {
-            tableTrigger.EndMiniGameAndOpenNewspaper(); 
-        }
+
+        // Небольшая жуткая пауза в полной темноте/пустоте подвала перед титрами
+        yield return new WaitForSeconds(1.5f);
+
+        // 4. ПЕРЕХОД НА ЭКРАН КОНЦОВКИ ИГРЫ
+        // Замените "EndGameScene" на точное имя вашей сцены с титрами или главным меню
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Финал"); 
     }
 }
 

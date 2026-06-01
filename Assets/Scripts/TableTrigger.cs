@@ -81,4 +81,14 @@ public class TableTrigger : MonoBehaviour
 
         Debug.Log("Мини-игра пройдена! Управление возвращено игроку.");
     }
+    
+    public GameObject GetPlayerObject()
+    {
+        if (playerMovementScript != null)
+        {
+            // Берем игровой объект, на котором висит скрипт ходьбы (это и есть наш Player 1)
+            return playerMovementScript.gameObject;
+        }
+        return null;
+    }
 }

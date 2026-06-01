@@ -8,6 +8,10 @@ public class GhostHandGame : MonoBehaviour
     [SerializeField] private RectTransform greenZone;   // Визуальная зеленая зона (чтобы менять её размер)
     [SerializeField] private TableTrigger tableTrigger; // Ссылка на первый скрипт для завершения
 
+    [Header("Настройки визуала газеты")]
+    [SerializeField] private Image newspaperImageUI;   // Ссылка на картинку газеты на Canvas
+    [SerializeField] private Sprite[] newspaperSprites;
+    
     [Header("Настройки механики")]
     [SerializeField] private float currentSpeed = 2.5f;
     [SerializeField] private float phase1Speed = 2.5f;
@@ -35,6 +39,7 @@ public class GhostHandGame : MonoBehaviour
         isAnimating = false;
         
         UpdateGreenZoneVisual();
+        UpdateNewspaperSprite();
     }
 
     private void Update()
@@ -111,6 +116,7 @@ public class GhostHandGame : MonoBehaviour
         greenMax = 0.07f;
         
         UpdateGreenZoneVisual();
+        UpdateNewspaperSprite();
         Debug.Log("Мысли ГГ (Фаза 2): Что за чертовщина?.. Я её не чувствую!");
         
         isAnimating = false;
@@ -126,6 +132,7 @@ public class GhostHandGame : MonoBehaviour
         greenMax = 0.04f;
         
         UpdateGreenZoneVisual();
+        UpdateNewspaperSprite();
         Debug.Log("Мысли ГГ (Фаза 3): Ну же! Соберись! Возьми её!");
         
         isAnimating = false;
@@ -160,6 +167,26 @@ public class GhostHandGame : MonoBehaviour
         
             // Принудительно сбрасываем позицию зеленой зоны строго по центру
             greenZone.anchoredPosition = Vector2.zero;
+        }
+    }
+    
+    [Header("Масштаб газеты")]
+    [Range(0.1f, 2f)] [SerializeField] private float newspaperScale = 1.0f; // Ползунок размера в инспекторе
+
+    private void UpdateNewspaperSprite()
+    {
+        if (newspaperImageUI != null && newspaperSprites != null && newspaperSprites.Length >= 3)
+        {
+            // Устанавливаем нужный спрайт
+            newspaperImageUI.sprite = newspaperSprites[currentPhase - 1];
+            
+            // Вместо SetNativeSize задаем масштаб через RectTransform
+            RectTransform rect = newspaperImageUI.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                // Устанавливаем одинаковый масштаб по осям X и Y
+                rect.localScale = new Vector3(newspaperScale, newspaperScale, 1f);
+            }
         }
     }
 }
