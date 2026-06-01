@@ -83,7 +83,7 @@ public class PuzzleManager : MonoBehaviour
         if (taskManager != null) taskManager.CompleteCurrentTask();
 
         // 4. Показываем диалоговое окно
-        string text = "Оно целое... ни единой трещины. Но почему я не вижу своего отражения?";
+        string text = "Это же наше семейное фото.. Но почему меня здесь нет? Я помню, я стоял прямо между ними... Меня будто выжгли из этой картины... Но зачем?";
         dialogueManager.ShowMonologue(text, false);
 
         // 5. Показываем кнопку "Закрыть"
