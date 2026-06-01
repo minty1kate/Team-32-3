@@ -5,7 +5,12 @@ public class HidingSpot : MonoBehaviour
     public GameObject player; // Ссылка на ГГ
 
     [Header("Настройки подсветки")]
-    public Color highlightColor = new Color(0.8f, 1f, 0.8f, 1f); // Цвет при приближении (чуть зеленоватый/яркий)
+    public Color highlightColor = new Color(0.8f, 1f, 0.8f, 1f); // Цвет при приближении
+
+    [Header("Звуковые эффекты")]
+    public AudioSource hidingAudioSource; // Ссылка на источник звука
+    public AudioClip hideSound;          // Звук забирания внутрь (например, скрипт шкафа)
+    public AudioClip unhideSound;        // Звук выхода наружу
 
     private bool inRange = false;
     private SpriteRenderer furnitureSR; // Спрайт самого кресла/шкафа
@@ -13,14 +18,12 @@ public class HidingSpot : MonoBehaviour
 
     void Start()
     {
-        // Получаем SpriteRenderer самого предмета мебели, на котором висит этот скрипт
         furnitureSR = GetComponent<SpriteRenderer>();
         if (furnitureSR != null)
         {
             originalColor = furnitureSR.color;
         }
 
-        // Если забыла перетащить игрока в инспекторе, попробуем найти его по тегу
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
@@ -29,23 +32,18 @@ public class HidingSpot : MonoBehaviour
 
     void Update()
     {
-        // Если игрока нет рядом — ничего не делаем
         if (!inRange) return;
 
-        // ПРОВЕРКА: Ищем экзорциста на сцене
         ExorcistPatrol exorcist = FindFirstObjectByType<ExorcistPatrol>();
 
-        // Если экзорцист погиб (стал null или выключен), прятаться больше нельзя
         if (exorcist == null || !exorcist.gameObject.activeInHierarchy)
         {
-            // Если игрок в этот момент сидел внутри, принудительно высаживаем его
             Player_Movement move = player.GetComponent<Player_Movement>();
             if (move != null && move.isHidden)
             {
                 ToggleHide();
             }
 
-            // Возвращаем мебели обычный цвет и выходим
             if (furnitureSR != null && furnitureSR.color != originalColor)
             {
                 furnitureSR.color = originalColor;
@@ -53,7 +51,6 @@ public class HidingSpot : MonoBehaviour
             return;
         }
 
-        // Если экзорцист жив, обычная логика укрытия работает
         if (Input.GetKeyDown(KeyCode.E))
         {
             ToggleHide();
@@ -69,12 +66,11 @@ public class HidingSpot : MonoBehaviour
 
         if (move == null) return;
 
-        // Переключаем состояние скрытности
         move.isHidden = !move.isHidden;
 
         if (move.isHidden)
         {
-            // Игрок спрятался: выключаем его скрипт движения и делаем невидимым
+            // Игрок спрятался
             move.enabled = false;
             if (playerSR != null)
             {
@@ -82,16 +78,28 @@ public class HidingSpot : MonoBehaviour
                 c.a = 0f;
                 playerSR.color = c;
             }
+
+            // Воспроизводим звук входа
+            if (hidingAudioSource != null && hideSound != null)
+            {
+                hidingAudioSource.PlayOneShot(hideSound);
+            }
         }
         else
         {
-            // Игрок вышел из укрытия: возвращаем управление и видимость
+            // Игрок вышел
             move.enabled = true;
             if (playerSR != null)
             {
                 Color c = playerSR.color;
                 c.a = 1f;
                 playerSR.color = c;
+            }
+
+            // Воспроизводим звук выхода
+            if (hidingAudioSource != null && unhideSound != null)
+            {
+                hidingAudioSource.PlayOneShot(unhideSound);
             }
         }
     }
@@ -100,7 +108,6 @@ public class HidingSpot : MonoBehaviour
     {
         if (other.gameObject == player)
         {
-            // Проверяем, жив ли враг, прежде чем включать подсветку
             ExorcistPatrol exorcist = FindFirstObjectByType<ExorcistPatrol>();
             if (exorcist == null || !exorcist.gameObject.activeInHierarchy) return;
 
@@ -114,10 +121,8 @@ public class HidingSpot : MonoBehaviour
         if (other.gameObject == player)
         {
             inRange = false;
-            // Выключаем подсветку и возвращаем исходный цвет
             if (furnitureSR != null) furnitureSR.color = originalColor;
 
-            // На случай, если игрок умудрился выйти из триггера, будучи невидимым
             Player_Movement move = player.GetComponent<Player_Movement>();
             if (move != null && move.isHidden)
             {

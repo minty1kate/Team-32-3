@@ -8,23 +8,27 @@ public class MazeManager : MonoBehaviour
     public MazeBall mazeBallScript;
 
     [Space(10)]
-    public GameObject openSafePanel; // Панель открытого сейфа с ключом внутри и кнопкой "Взять"
+    public GameObject openSafePanel;
+
+    [Header("Звуковые эффекты")]
+    public AudioSource safeAudioSource;
+    public AudioClip openSafeSound;
 
     [Header("Настройки Ключа для Инвентаря")]
-    public InventoryManager inventoryManager; // Ссылка на менеджер инвентаря
-    public TaskManager taskManager;           // Ссылка на менеджер задач
-    public Sprite keyIcon;                    // Картинка ключа, которая отобразится в инвентаре
+    public InventoryManager inventoryManager;
+    public TaskManager taskManager;
+    public Sprite keyIcon;
 
     [Header("Система Диалогов")]
-    public DialogueManager dialogueManager;   // Ссылка на менеджер диалогов
+    public DialogueManager dialogueManager;
 
     [Header("Ссылки на сцене")]
     public GameObject keyItem;
     public SafePicture safePicture;
-    public SpriteRenderer pictureSpriteRenderer; // Рендерер картины на стене, чтобы сменить ей спрайт
-    public Sprite openSafeWallSprite;            // Спрайт открытого сейфа для стены холла
+    public SpriteRenderer pictureSpriteRenderer;
+    public Sprite openSafeWallSprite;
+    public DoorHighlight doorScript; // Ссылка на скрипт двери
 
-    // Перетащи сюда скрипт управления своего ГГ
     public MonoBehaviour playerMovementScript;
 
     void Start()
@@ -44,7 +48,6 @@ public class MazeManager : MonoBehaviour
         if (mazePanel != null)
         {
             mazePanel.SetActive(true);
-
             if (playerMovementScript != null) playerMovementScript.enabled = false;
 
             Cursor.visible = true;
@@ -52,13 +55,17 @@ public class MazeManager : MonoBehaviour
 
             SafeScreenController screenCtrl = mazePanel.GetComponent<SafeScreenController>();
             if (screenCtrl != null) screenCtrl.ResetToSafeView();
-
             if (mazeBallScript != null) mazeBallScript.ResetToStart();
         }
     }
 
     public void WinMaze()
     {
+        if (safeAudioSource != null && openSafeSound != null)
+        {
+            safeAudioSource.PlayOneShot(openSafeSound);
+        }
+
         StartCoroutine(WinSequenceCoroutine());
     }
 
@@ -76,8 +83,6 @@ public class MazeManager : MonoBehaviour
         }
     }
 
-    // Этот метод вешаем на кнопку "Взять" в UI
-    // Замени этот метод в MazeManager.cs
     public void TakeKeyAndCloseEverything()
     {
         if (inventoryManager != null && keyIcon != null) inventoryManager.AddItem(keyIcon);
@@ -86,16 +91,15 @@ public class MazeManager : MonoBehaviour
         if (keyItem != null) keyItem.SetActive(true);
         if (pictureSpriteRenderer != null && openSafeWallSprite != null) pictureSpriteRenderer.sprite = openSafeWallSprite;
 
-        // Запускаем монолог
-        TriggerFinalHallDialogue();
+        // РАЗБЛОКИРУЕМ ДВЕРЬ НА СЦЕНЕ
+        if (doorScript != null) doorScript.UnlockDoor();
 
-        // Запускаем фикс мыши
+        TriggerFinalHallDialogue();
         StartCoroutine(ForceShowCursorRoutine());
     }
 
     private IEnumerator ForceShowCursorRoutine()
     {
-        // Ждем один кадр, пока все скрипты отработают свои Update()
         yield return null;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -107,28 +111,22 @@ public class MazeManager : MonoBehaviour
         {
             string[] finalLines = new string[]
             {
-            "Отлично, ключ у меня. Он такой холодный и тяжелый...",
-            "Барьер экзорциста исчез вместе с ним, теперь проход свободен.",
-            "Пора спускаться в подвал и закончить со всем этим. Надеюсь, там я найду ответы."
+                "Отлично, ключ у меня. Он такой холодный и тяжелый...",
+                "Барьер экзорциста исчез вместе с ним, теперь проход свободен.",
+                "Пора спускаться в подвал и закончить со всем этим. Надеюсь, там я найду ответы."
             };
 
-            // Блокируем движение ГГ
             if (playerMovementScript != null) playerMovementScript.enabled = false;
 
-            // Принудительно освобождаем курсор перед стартом текста
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-            // Запускаем диалог
             dialogueManager.StartTutorial(finalLines);
 
-            // ХАК ДЛЯ КУРСОРA: Очищаем старые функции кнопки и вешаем новую чистую логику
             if (dialogueManager.closeButton != null)
             {
                 dialogueManager.closeButton.onClick.RemoveAllListeners();
-                // Возвращаем стандартное закрытие панели диалога
                 dialogueManager.closeButton.onClick.AddListener(dialogueManager.CloseDialogue);
-                // Добавляем разблокировку игрока и возврат мыши
                 dialogueManager.closeButton.onClick.AddListener(EnablePlayerMovement);
             }
         }
@@ -138,8 +136,6 @@ public class MazeManager : MonoBehaviour
         }
     }
 
-    // НОВЫЙ МЕТОД: Возвращает игроку подвижность и прячет курсор.
-    // Его мы вызовем вручную при закрытии диалога.
     public void EnablePlayerMovement()
     {
         if (playerMovementScript != null) playerMovementScript.enabled = true;

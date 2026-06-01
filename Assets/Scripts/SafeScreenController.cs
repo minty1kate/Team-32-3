@@ -9,11 +9,17 @@ public class SafeScreenController : MonoBehaviour
     [Header("Элементы Лабиринта")]
     public GameObject mazeGameplayGroup;  // Объект, в котором лежат стены, точка и финиш
 
+    [Header("Настройки Звука")]
+    [SerializeField] private AudioClip safeClickSound; // Сюда перетащим аудиофайл (например, щелчок или скрежет)
+
     // Этот метод мы привяжем к прозрачной кнопке на сейфе
     public void ClickOnSafeInterface()
     {
         // ЭТА СТРОКА ДЛЯ ПРОВЕРКИ КЛИКА
         Debug.LogWarning("!!! МЕТОД КЛИКА ВЫЗВАН УСПЕШНО !!!");
+
+        // ВОСПРОИЗВЕДЕНИЕ ЗВУКА КЛИКА
+        PlayClickSound();
 
         if (safeBackground != null) safeBackground.SetActive(false);
         if (safeTriggerButton != null) safeTriggerButton.SetActive(false);
@@ -26,6 +32,28 @@ public class SafeScreenController : MonoBehaviour
         else
         {
             Debug.LogError("ОШИБКА: Поле mazeGameplayGroup ПУСТОЕ в инспекторе!");
+        }
+    }
+
+    // Вспомогательный метод для проигрывания аудиоклипа
+    private void PlayClickSound()
+    {
+        if (safeClickSound != null)
+        {
+            // Воспроизводит звук в точке нахождения камеры (чтобы игрок его четко слышал)
+            if (Camera.main != null)
+            {
+                AudioSource.PlayClipAtPoint(safeClickSound, Camera.main.transform.position);
+            }
+            else
+            {
+                // Если главной камеры нет, воспроизводим в точке самого объекта
+                AudioSource.PlayClipAtPoint(safeClickSound, transform.position);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Предупреждение: В SafeScreenController не назначен safeClickSound!");
         }
     }
 
