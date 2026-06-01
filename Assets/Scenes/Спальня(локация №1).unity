@@ -231,6 +231,7 @@ MonoBehaviour:
   pieceIcon: {fileID: 232423640162782051, guid: 35bfc6bfbbb6be64c8846cc455505fb7, type: 3}
   hintObject: {fileID: 0}
   darkColor: {r: 0.41960785, g: 0.41568628, b: 0.41568628, a: 1}
+  pickupSound: {fileID: 8300000, guid: 965b3ef725d5bba40900001e29a8a4f1, type: 3}
 --- !u!61 &33235083
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -894,6 +895,7 @@ MonoBehaviour:
   pieceIcon: {fileID: 3293302145716256187, guid: 5130ec6aa4459234ebb4107660a81eb5, type: 3}
   hintObject: {fileID: 0}
   darkColor: {r: 0.41960785, g: 0.41568628, b: 0.41568628, a: 1}
+  pickupSound: {fileID: 8300000, guid: 965b3ef725d5bba40900001e29a8a4f1, type: 3}
 --- !u!61 &574480364
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2353,6 +2355,7 @@ MonoBehaviour:
   pieceIcon: {fileID: -4125372986564591065, guid: 8edaa9d9da02ddc4798831c04fc16492, type: 3}
   hintObject: {fileID: 0}
   darkColor: {r: 0.41960785, g: 0.41568628, b: 0.41568628, a: 1}
+  pickupSound: {fileID: 8300000, guid: 965b3ef725d5bba40900001e29a8a4f1, type: 3}
 --- !u!61 &1256575243
 BoxCollider2D:
   m_ObjectHideFlags: 0
