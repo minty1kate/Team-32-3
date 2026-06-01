@@ -383,6 +383,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &307007626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 752886610437050225, guid: b5fdfd004bf500e44ab178aad3e6c3fa, type: 3}
+  m_PrefabInstance: {fileID: 1252424024}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bac0443e99c40de44bd86a4b90d1c3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
 --- !u!114 &369726362 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3383754976030585882, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
@@ -1821,6 +1832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MirrorClothGame
   clothSlider: {fileID: 1490365811}
   tableTrigger: {fileID: 1857124797}
+  dialogueManager: {fileID: 307007626}
   baseResistance: 0.4
   pullSensitivity: 0.5
   maxSafeSpeed: 0.8
@@ -1993,6 +2005,7 @@ MonoBehaviour:
   HandsGroup: {fileID: 290100670}
   QteTextUI: {fileID: 0}
   BloodOverlay: {fileID: 1072354012}
+  dialogueManager: {fileID: 0}
   handPrefabs:
   - {fileID: 895253139387431769, guid: c7ea42a9ea49b8d408a9a1a9c9857afc, type: 3}
   - {fileID: 6384287598493702643, guid: 3043fae97ae358546af31a686ec8337d, type: 3}
@@ -2339,6 +2352,7 @@ MonoBehaviour:
   uiSlider: {fileID: 994568486}
   greenZone: {fileID: 1987639608}
   tableTrigger: {fileID: 1857124797}
+  dialogueManager: {fileID: 307007626}
   newspaperImageUI: {fileID: 1940545098}
   newspaperSprites:
   - {fileID: 3587704727851859435, guid: e47fd6fd3113b9e4eb4ec4a7fd5c0b31, type: 3}
