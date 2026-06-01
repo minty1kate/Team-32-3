@@ -47,6 +47,13 @@ public class GhostHandGame : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Активирован чит-код: мгновенное завершение мини-игры с газетой.");
+            FinishGame();
+            return;
+        }
+        
         if (isAnimating || isDialogueActive) return;
 
         sliderValue += direction * currentSpeed * Time.deltaTime;
