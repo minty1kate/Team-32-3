@@ -10,12 +10,24 @@ public class TableTrigger : MonoBehaviour
     [SerializeField] private MonoBehaviour playerMovementScript; // Скрипт перемещения вашего героя
     [Header("Сюжетные настройки")]
     [SerializeField] private bool isMirrorTrigger = false;
+    
+    [Header("Настройки звука мини-игры")]
+    [SerializeField] private AudioSource audioSource; // Ссылка на компонент AudioSource
+    [SerializeField] private AudioClip miniGameLoopSound;
+    [SerializeField] public AudioSource backgroundAudioSource;
+    [SerializeField] private AudioClip mainSceneTheme; 
 
     private bool canInteract = false;
     private bool isMiniGameActive = false;
 
     private void Start()
     {
+        if (backgroundAudioSource != null && mainSceneTheme != null)
+        {
+            backgroundAudioSource.clip = mainSceneTheme; // Вставляем "кассету" в "магнитофон"
+            backgroundAudioSource.loop = true;          // Делаем звук бесконечным
+            backgroundAudioSource.Play();               // Включаем
+        }
         // В начале игры всё выключено
         if (interactPrompt != null) interactPrompt.SetActive(false);
         if (miniGameCanvas != null) miniGameCanvas.SetActive(false);
@@ -67,6 +79,13 @@ public class TableTrigger : MonoBehaviour
 
         // Включаем интерфейс мини-игры
         if (miniGameCanvas != null) miniGameCanvas.SetActive(true);
+        
+        if (audioSource != null && miniGameLoopSound != null)
+        {
+            audioSource.clip = miniGameLoopSound;
+            audioSource.loop = true; // Включаем зацикливание
+            audioSource.Play();      // Включаем воспроизведение
+        }
     }
 
     // Этот метод мы вызовем из второго скрипта, когда игра закончится
@@ -77,6 +96,11 @@ public class TableTrigger : MonoBehaviour
         if (playerMovementScript != null) 
         {
             playerMovementScript.enabled = true;
+        }
+        
+        if (audioSource != null)
+        {
+            audioSource.Stop(); // Полностью выключаем звук
         }
 
         Debug.Log("Мини-игра пройдена! Управление возвращено игроку.");

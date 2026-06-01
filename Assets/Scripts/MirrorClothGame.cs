@@ -18,7 +18,12 @@ public class MirrorClothGame : MonoBehaviour
 
     [Header("Настройки призрачного ветра")]
     [SerializeField] private float windForce = 1.2f;       
-    [SerializeField] private float windFrequency = 1.2f;   
+    [SerializeField] private float windFrequency = 1.2f; 
+    
+    [Header("Настройки финального звука")]
+    [SerializeField] public AudioSource backgroundMusicSource;
+    [SerializeField] private AudioSource audioSource; // Ссылка на компонент AudioSource
+    [SerializeField] private AudioClip finalEndSound;
 
     private bool isHolding = false;
     private bool isGameFinished = false;
@@ -125,6 +130,24 @@ public class MirrorClothGame : MonoBehaviour
     private IEnumerator WaitAndCloseScreen()
     {
         if (clothSlider != null) clothSlider.interactable = false;
+        
+        // === ОСТАНОВКА МУЗЫКИ ДО НАЧАЛА ФИНАЛЬНОГО ЗВУКА ===
+        if (backgroundMusicSource != null)
+        {
+            backgroundMusicSource.Stop(); 
+        }
+        
+        if (audioSource != null && finalEndSound != null)
+        {
+            audioSource.PlayOneShot(finalEndSound);
+            
+            // Ждем еще 2.0 секунды, пока звук проигрывается на пустом черном экране, 
+            // чтобы сцена не переключилась мгновенно посреди аудио-эффекта
+        }
+        else
+        {
+            Debug.LogWarning("Финальный звук не настроен в инспекторе!");
+        }
 
         // Ждем 3 секунды, пока игрок смотрит в пустое зеркало
         yield return new WaitForSeconds(3.0f);
@@ -200,6 +223,7 @@ public class MirrorClothGame : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1.5f);
+        
         UnityEngine.SceneManagement.SceneManager.LoadScene("Финал"); 
     }
 }

@@ -42,6 +42,10 @@ public class StaircaseQTE : MonoBehaviour
 
     private Transform mainCameraTransform;
     private Vector3 originalCameraPosition;
+    
+    [Header("Настройки звука QTE")]
+    [SerializeField] private AudioSource audioSource; // Ссылка на компонент AudioSource
+    [SerializeField] private AudioClip qteSound;    
 
     private void Start()
     {
@@ -119,6 +123,13 @@ public class StaircaseQTE : MonoBehaviour
         for (int i = 0; i < handPrefabs.Length; i++)
         {
             SpawnSpecificHand(handPrefabs[i]);
+        }
+        
+        if (audioSource != null && qteSound != null)
+        {
+            audioSource.clip = qteSound;
+            audioSource.loop = true; // Включаем зацикливание, чтобы звук не обрывался
+            audioSource.Play();
         }
     }
 
@@ -198,6 +209,11 @@ public class StaircaseQTE : MonoBehaviour
     {
         isQteActive = false;
         isPermanentlyPassed = true;
+        
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
 
         if (mainCameraTransform != null)
         {
@@ -250,6 +266,11 @@ public class StaircaseQTE : MonoBehaviour
     private void QteFailed()
     {
         isQteActive = false;
+        
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
 
         if (mainCameraTransform != null)
         {
