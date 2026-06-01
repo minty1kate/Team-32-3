@@ -9,6 +9,15 @@ public class SafePicture : MonoBehaviour
 
     [Header("Ссылки")]
     public MazeManager mazeManager; // Ссылка на менеджер лабиринта
+    public DialogueManager dialogueManager; // Ссылка на менеджер диалогов
+
+    [Header("Текст монолога")]
+    [SerializeField]
+    private string[] safeLines = new string[]
+    {
+        "Ого... Не знал, что за этой картиной скрывается потайной сейф. Что же такого секретного можно здесь прятать?",
+        "И как мне его открыть?.. Похоже, механизм заклинило, придется пробиваться через эту защиту."
+    };
 
     private SpriteRenderer _sr;
     private Color _originalColor;
@@ -43,10 +52,7 @@ public class SafePicture : MonoBehaviour
         if (_isPlayerInside && Input.GetKeyDown(KeyCode.T))
         {
             _canInteract = true; // Принудительно разрешаем взаимодействие
-            if (mazeManager != null)
-            {
-                mazeManager.OpenMaze(); // Мгновенно открываем сейф и лабиринт
-            }
+            InteractWithPicture();
             return; // Выходим из метода, чтобы обычный код ниже не мешал
         }
         // --------------------------------
@@ -54,23 +60,25 @@ public class SafePicture : MonoBehaviour
         // Обычная логика игры (по кнопке E и после смерти экзорциста)
         if (_isPlayerInside && _canInteract && Input.GetKeyDown(KeyCode.E))
         {
-            if (mazeManager != null)
-            {
-                mazeManager.OpenMaze();
-            }
+            InteractWithPicture();
         }
     }
-    //void Update()
-    //{
-    //    // Если игрок рядом, экзорцист мертв и нажата кнопка E
-    //    if (_isPlayerInside && _canInteract && Input.GetKeyDown(KeyCode.E))
-    //    {
-    //        if (mazeManager != null)
-    //        {
-    //            mazeManager.OpenMaze(); // Открываем лабиринт через менеджер
-    //        }
-    //    }
-    //}
+
+    private void InteractWithPicture()
+    {
+        // 1. Открываем лабиринт/сейф через менеджер
+        if (mazeManager != null)
+        {
+            mazeManager.OpenMaze();
+        }
+
+        // 2. Одновременно запускаем диалоговое окно поверх сейфа
+        if (dialogueManager != null && safeLines.Length > 0)
+        {
+            // Используем метод StartTutorial, который умеет работать с очередью строк и кнопками Далее/Закрыть
+            dialogueManager.StartTutorial(safeLines);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

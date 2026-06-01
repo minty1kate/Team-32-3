@@ -16,6 +16,10 @@ public class ExorcistPatrol : MonoBehaviour
     [Header("Эффекты боли (UI)")]
     public GameObject painFlashPanel; // Красная панель на весь экран внутри Canvas
 
+    [Header("Финальный монолог после смерти")]
+    [TextArea(2, 5)] // Делает поля в инспекторе удобными для ввода текста
+    public string[] deathDialogueLines; // Сюда в инспекторе пишем реплики ГГ после победы
+
     private float _currentSpeed;
     private int currentPointIndex = 0;
     private SpriteRenderer spriteRenderer;
@@ -136,6 +140,13 @@ public class ExorcistPatrol : MonoBehaviour
         if (maze != null)
         {
             maze.ExorcistIsDead(); // Передаем сигнал в мини-игру сейфа
+        }
+
+        // 3. ЗАПУСКАЕМ ДИАЛОГ ПОСЛЕ СМЕРТИ ЭКЗОРЦИСТА
+        DialogueManager dialogueManager = FindFirstObjectByType<DialogueManager>();
+        if (dialogueManager != null && deathDialogueLines != null && deathDialogueLines.Length > 0)
+        {
+            dialogueManager.StartTutorial(deathDialogueLines);
         }
 
         gameObject.SetActive(false);

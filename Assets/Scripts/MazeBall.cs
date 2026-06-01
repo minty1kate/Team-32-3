@@ -58,6 +58,13 @@ public class MazeBall : MonoBehaviour
     public void ResetToStart()
     {
         if (_rectTransform == null) _rectTransform = GetComponent<RectTransform>();
+
+        // Если игра только запустилась, фиксируем позицию, которую нам дал генератор
+        if (Time.timeSinceLevelLoad < 0.2f)
+        {
+            _startPosition = _rectTransform.anchoredPosition;
+        }
+
         _rectTransform.anchoredPosition = _startPosition;
     }
 

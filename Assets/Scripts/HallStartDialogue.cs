@@ -17,7 +17,6 @@ public class HallStartDialogue : MonoBehaviour
             _playerMovement = player.GetComponent("Movement") as MonoBehaviour;
         }
 
-        // Загружаем новые задачи для Холла (показываться будет только первая)
         if (_taskManager != null)
         {
             _taskManager.SetSceneTasks(new string[] {
@@ -43,7 +42,8 @@ public class HallStartDialogue : MonoBehaviour
 
             if (_playerMovement != null) _playerMovement.enabled = false;
 
-            _dialogueManager.StartTutorial(hallLines);
+            // Вызываем специальный метод для старта холла
+            _dialogueManager.StartHallIntro(hallLines);
         }
     }
 }
