@@ -7,7 +7,10 @@ public class MirrorPiece : MonoBehaviour
     public GameObject hintObject;
 
     [Header("Настройки подсветки")]
-    public Color darkColor = new Color(0.5f, 0.5f, 0.5f, 1f); // Тот самый темный цвет
+    public Color darkColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+
+    [Header("Звуковые эффекты")]
+    [SerializeField] private AudioClip pickupSound; // Сюда перетащи аудиофайл подбора
 
     private SpriteRenderer _sr;
     private Color _originalColor;
@@ -22,7 +25,6 @@ public class MirrorPiece : MonoBehaviour
 
     void Update()
     {
-        // Если игрок рядом и нажал E
         if (_canInteract && Input.GetKeyDown(KeyCode.E))
         {
             PickUp();
@@ -31,12 +33,18 @@ public class MirrorPiece : MonoBehaviour
 
     private void PickUp()
     {
-        // 1. Добавляем в инвентарь
-        InventoryManager inv = FindObjectOfType<InventoryManager>();
+        // Воспроизводим звук в точке нахождения детальки (не прервется при Destroy)
+        if (pickupSound != null)
+        {
+            AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+        }
+
+        // 1. Добавляем в инвентарь (исправлено на FindAnyObjectByType)
+        InventoryManager inv = FindAnyObjectByType<InventoryManager>();
         if (inv != null) inv.AddItem(pieceIcon);
 
         // 2. Увеличиваем счетчик в менеджере задач
-        TaskManager tm = FindObjectOfType<TaskManager>();
+        TaskManager tm = FindAnyObjectByType<TaskManager>();
         if (tm != null)
         {
             tm.IncrementMirrorPieces();
@@ -51,7 +59,7 @@ public class MirrorPiece : MonoBehaviour
         {
             _canInteract = true;
             if (hintObject != null) hintObject.SetActive(true);
-            if (_sr != null) _sr.color = darkColor; // Подсветка при приближении
+            if (_sr != null) _sr.color = darkColor;
         }
     }
 
@@ -60,7 +68,7 @@ public class MirrorPiece : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             _canInteract = false;
-            if (_sr != null) _sr.color = _originalColor; // Возвращаем цвет
+            if (_sr != null) _sr.color = _originalColor;
             if (hintObject != null) hintObject.SetActive(false);
         }
     }
