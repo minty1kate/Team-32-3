@@ -38,9 +38,9 @@ namespace DefaultNamespace
 
         [Header("Настройки Пятнашек (для этапа ThirdStep_Puzzle)")]
         [SerializeField] private GameObject puzzleWindow;
-        
+
         [Header("Настройки звука")]
-        [SerializeField] private AudioSource audioSource; // Ссылка на компонент AudioSource
+        [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip finalStepSound;
         [SerializeField] private AudioClip firstStepSound;
         [SerializeField] private AudioClip secondStepSound;
@@ -58,16 +58,15 @@ namespace DefaultNamespace
             if (audioSource != null && initialLoopingSound != null)
             {
                 audioSource.clip = initialLoopingSound;
-                audioSource.loop = true; // Включаем зацикливание
-                audioSource.Play();      // Запускаем воспроизведение
+                audioSource.loop = true;
+                audioSource.Play();
             }
-            
+
             if (currentStep == StepType.FirstStep_Rotate)
             {
                 IsFirstStepCompleted = false;
                 IsPuzzleCompleted = false;
 
-                // Передаем задачи гостиной в TaskManager прямо отсюда!
                 TaskManager tm = FindAnyObjectByType<TaskManager>();
                 if (tm != null)
                 {
@@ -121,13 +120,13 @@ namespace DefaultNamespace
                 {
                     Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
                 }
-                
+
                 _eventTriggered = true;
-                
+
                 if (audioSource != null)
                 {
-                    audioSource.Stop();       // Останавливаем фоновый звук
-                    audioSource.loop = false; // Отключаем зацикливание для следующих звуков (чтобы PlayOneShot работал корректно)
+                    audioSource.Stop();
+                    audioSource.loop = false;
                 }
 
                 if (blackOverlay != null) blackOverlay.SetActive(true);
@@ -140,9 +139,9 @@ namespace DefaultNamespace
                 {
                     Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
                 }
-                
+
                 if (blackOverlay != null) blackOverlay.SetActive(false);
-                
+
                 if (npcScript != null)
                 {
                     npcScript.StartConfused();
@@ -184,9 +183,8 @@ namespace DefaultNamespace
             }
             else if (currentStep == StepType.FinalStep_RunAway)
             {
-                _eventTriggered = true; // Защита от повторного падения книг
-                
-                // === ВОСПРОИЗВЕДЕНИЕ ЗВУКА ДО ДИАЛОГА ===
+                _eventTriggered = true;
+
                 if (audioSource != null && finalStepSound != null)
                 {
                     audioSource.PlayOneShot(finalStepSound);
@@ -219,7 +217,7 @@ namespace DefaultNamespace
                         "Да! Получилось! Уноси свои ноги, расхититель чужих жизней!",
                         "Гримуары на полу, проклятый круг разорван... Дом снова принадлежит мне.",
                         "*Грохот из глубины коридора*",
-                        "Погоди... А это еще что за чертовщина? Звук шел со стороны кухни...",
+                        "Погодите ка... А это еще что за чертовщина? Что за странные звуки...",
                         "Будто там кто-то яростно скребется по кафелю... Надо проверить."
                     };
 
@@ -253,13 +251,13 @@ namespace DefaultNamespace
             _eventTriggered = true;
             IsPuzzleCompleted = true;
             Debug.Log("Доступ к финальному испугу открыт!");
-            
+
             if (audioSource != null && postPuzzleLoopingSound != null)
             {
-                audioSource.Stop();       // Останавливаем предыдущие звуки
+                audioSource.Stop();
                 audioSource.clip = postPuzzleLoopingSound;
-                audioSource.loop = true;   // Включаем зацикливание
-                audioSource.Play();        // Запускаем звук
+                audioSource.loop = true;
+                audioSource.Play();
             }
 
             if (paintingRenderer != null)
@@ -306,6 +304,10 @@ namespace DefaultNamespace
         private void OnFinalDialogueFinished()
         {
             TogglePlayerMovement(true);
+
+            // ВОЗВРАЩЕНО: зачеркивает квест «Уронить книжки» и открывает «Проверить кухню»
+            TaskManager tm = FindAnyObjectByType<TaskManager>();
+            if (tm != null) tm.CompleteCurrentTask();
         }
 
         private void TogglePlayerMovement(bool state)
