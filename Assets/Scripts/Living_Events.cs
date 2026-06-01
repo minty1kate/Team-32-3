@@ -38,6 +38,14 @@ namespace DefaultNamespace
 
         [Header("Настройки Пятнашек (для этапа ThirdStep_Puzzle)")]
         [SerializeField] private GameObject puzzleWindow;
+        
+        [Header("Настройки звука")]
+        [SerializeField] private AudioSource audioSource; // Ссылка на компонент AudioSource
+        [SerializeField] private AudioClip finalStepSound;
+        [SerializeField] private AudioClip firstStepSound;
+        [SerializeField] private AudioClip secondStepSound;
+        [SerializeField] private AudioClip initialLoopingSound;
+        [SerializeField] private AudioClip postPuzzleLoopingSound;
 
         private bool _canInteract = false;
         private bool _eventTriggered = false;
@@ -47,6 +55,13 @@ namespace DefaultNamespace
 
         void Start()
         {
+            if (audioSource != null && initialLoopingSound != null)
+            {
+                audioSource.clip = initialLoopingSound;
+                audioSource.loop = true; // Включаем зацикливание
+                audioSource.Play();      // Запускаем воспроизведение
+            }
+            
             if (currentStep == StepType.FirstStep_Rotate)
             {
                 IsFirstStepCompleted = false;
@@ -98,14 +113,36 @@ namespace DefaultNamespace
 
             if (currentStep == StepType.FirstStep_Rotate)
             {
+                if (audioSource != null && firstStepSound != null)
+                {
+                    audioSource.PlayOneShot(firstStepSound);
+                }
+                else
+                {
+                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
+                }
+                
                 _eventTriggered = true;
+                
+                if (audioSource != null)
+                {
+                    audioSource.Stop();       // Останавливаем фоновый звук
+                    audioSource.loop = false; // Отключаем зацикливание для следующих звуков (чтобы PlayOneShot работал корректно)
+                }
 
                 if (blackOverlay != null) blackOverlay.SetActive(true);
                 yield return new WaitForSeconds(2f);
+                if (firstStepSound != null)
+                {
+                    audioSource.PlayOneShot(firstStepSound);
+                }
+                else
+                {
+                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
+                }
+                
                 if (blackOverlay != null) blackOverlay.SetActive(false);
-
-                yield return new WaitForSeconds(0.5f);
-
+                
                 if (npcScript != null)
                 {
                     npcScript.StartConfused();
@@ -147,7 +184,17 @@ namespace DefaultNamespace
             }
             else if (currentStep == StepType.FinalStep_RunAway)
             {
-                _eventTriggered = true;
+                _eventTriggered = true; // Защита от повторного падения книг
+                
+                // === ВОСПРОИЗВЕДЕНИЕ ЗВУКА ДО ДИАЛОГА ===
+                if (audioSource != null && finalStepSound != null)
+                {
+                    audioSource.PlayOneShot(finalStepSound);
+                }
+                else
+                {
+                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
+                }
 
                 if (backgroundObject != null)
                 {
@@ -206,6 +253,14 @@ namespace DefaultNamespace
             _eventTriggered = true;
             IsPuzzleCompleted = true;
             Debug.Log("Доступ к финальному испугу открыт!");
+            
+            if (audioSource != null && postPuzzleLoopingSound != null)
+            {
+                audioSource.Stop();       // Останавливаем предыдущие звуки
+                audioSource.clip = postPuzzleLoopingSound;
+                audioSource.loop = true;   // Включаем зацикливание
+                audioSource.Play();        // Запускаем звук
+            }
 
             if (paintingRenderer != null)
             {
@@ -251,9 +306,6 @@ namespace DefaultNamespace
         private void OnFinalDialogueFinished()
         {
             TogglePlayerMovement(true);
-
-            TaskManager tm = FindAnyObjectByType<TaskManager>();
-            if (tm != null) tm.CompleteCurrentTask();
         }
 
         private void TogglePlayerMovement(bool state)
