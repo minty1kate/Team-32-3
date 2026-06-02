@@ -130,34 +130,24 @@ public class MirrorClothGame : MonoBehaviour
     private IEnumerator WaitAndCloseScreen()
     {
         if (clothSlider != null) clothSlider.interactable = false;
-        
-        // === ОСТАНОВКА МУЗЫКИ ДО НАЧАЛА ФИНАЛЬНОГО ЗВУКА ===
+
         if (backgroundMusicSource != null)
         {
-            backgroundMusicSource.Stop(); 
+            backgroundMusicSource.Stop();
         }
-        
+
         if (audioSource != null && finalEndSound != null)
         {
             audioSource.PlayOneShot(finalEndSound);
-            
-            // Ждем еще 2.0 секунды, пока звук проигрывается на пустом черном экране, 
-            // чтобы сцена не переключилась мгновенно посреди аудио-эффекта
-        }
-        else
-        {
-            Debug.LogWarning("Финальный звук не настроен в инспекторе!");
         }
 
-        // Ждем 3 секунды, пока игрок смотрит в пустое зеркало
         yield return new WaitForSeconds(3.0f);
 
-        // Закрываем окно мини-игры с зеркалом
-        Canvas parentCanvas = GetComponentInParent<Canvas>();
-        if (parentCanvas != null) parentCanvas.gameObject.SetActive(false);
-        else gameObject.SetActive(false);
+        // ВМЕСТО ОТКЛЮЧЕНИЯ ВСЕГО ОБЪЕКТА: 
+        // Просто скрываем графику (например, выключаем слайдер или картинку), 
+        // чтобы мини-игра исчезла с экрана, но сам GameObject 'MirrorGame' оставался активным для корутины.
+        if (clothSlider != null) clothSlider.gameObject.SetActive(false);
 
-        // ЗАПУСК ИТОГОВОГО МОНОЛОГА
         if (dialogueManager != null)
         {
             string[] linesAfterMirror = new string[]
@@ -168,7 +158,6 @@ public class MirrorClothGame : MonoBehaviour
                 "Я... пропадаю... меня здесь нет"
             };
 
-            // Блокируем скрипт движения перед выводом текста
             if (tableTrigger != null && tableTrigger.GetPlayerObject() != null)
             {
                 Player_Movement movement = tableTrigger.GetPlayerObject().GetComponent<Player_Movement>();
@@ -177,7 +166,6 @@ public class MirrorClothGame : MonoBehaviour
 
             dialogueManager.StartTutorial(linesAfterMirror);
 
-            // Настраиваем кнопку закрытия, чтобы запустить исчезновение персонажа
             if (dialogueManager.closeButton != null)
             {
                 dialogueManager.closeButton.onClick.RemoveAllListeners();
