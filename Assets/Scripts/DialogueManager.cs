@@ -33,7 +33,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Однострочный монолог (мысли у предметов)
-    public void ShowMonologue(string text, bool isOneTime = false)
+    public void ShowMonologue(string text, bool isOneTime = false, bool disableCloseButton = false)
     {
         if (isOneTime && _wasInitialMonologueShown) return;
         if (isOneTime) _wasInitialMonologueShown = true;
@@ -42,11 +42,27 @@ public class DialogueManager : MonoBehaviour
         _dialogueLines = null;
 
         dialoguePanel.SetActive(true);
-        nextButton.gameObject.SetActive(false);
-        closeButton.gameObject.SetActive(false);
+        if (nextButton != null) nextButton.gameObject.SetActive(false);
+        if (closeButton != null) closeButton.gameObject.SetActive(false);
 
         if (displayCoroutine != null) StopCoroutine(displayCoroutine);
-        displayCoroutine = StartCoroutine(TypeText(text));
+        // Передаем флаг дальше в корутину
+        displayCoroutine = StartCoroutine(TypeText(text, disableCloseButton));
+    }
+    IEnumerator TypeText(string line, bool disableCloseButton)
+    {
+        textDisplay.text = "";
+        foreach (char letter in line.ToCharArray())
+        {
+            textDisplay.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        // Включаем кнопку закрытия ТОЛЬКО если нас не попросили её скрыть
+        if (!disableCloseButton && closeButton != null)
+        {
+            closeButton.gameObject.SetActive(true);
+        }
     }
 
     // СТАРЫЙ МЕТОД (ОСТАЛСЯ ДЛЯ ДРУГИХ СЦЕН БЕЗ ИЗМЕНЕНИЙ)

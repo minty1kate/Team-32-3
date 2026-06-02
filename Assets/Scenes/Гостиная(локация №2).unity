@@ -6710,9 +6710,17 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 82802800487606152, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
     - {fileID: 8519961317896141243, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6384028590325345690, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1677094972}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
+--- !u!224 &1088407584 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6384028590325345690, guid: 0e607339538a09e41bdad36ca3b0f724, type: 3}
+  m_PrefabInstance: {fileID: 1088407583}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1174992060 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 752886610437050225, guid: b5fdfd004bf500e44ab178aad3e6c3fa, type: 3}
@@ -7737,19 +7745,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677094968}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.169696, y: 2.169696, z: 2.169696}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1761198574}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1088407584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 959.5481, y: 540.2544}
+  m_SizeDelta: {x: 884.5, y: 498}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1718374786
 GameObject:
   m_ObjectHideFlags: 0
@@ -13108,7 +13116,6 @@ SceneRoots:
   - {fileID: 1220908040}
   - {fileID: 2131702485}
   - {fileID: 1277193972}
-  - {fileID: 1677094972}
   - {fileID: 192634546}
   - {fileID: 298523887}
   - {fileID: 1084858955}

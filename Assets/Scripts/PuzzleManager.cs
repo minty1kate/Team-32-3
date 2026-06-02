@@ -82,11 +82,11 @@ public class PuzzleManager : MonoBehaviour
         // 3. Вычеркиваем задачу
         if (taskManager != null) taskManager.CompleteCurrentTask();
 
-        // 4. Показываем диалоговое окно
+        // 4. Показываем диалоговое окно (передаем true в самый конец, чтобы скрыть стандартную кнопку закрытия)
         string text = "Это же наше семейное фото.. Но почему меня здесь нет? Я помню, я стоял прямо между ними... Меня будто выжгли из этой картины... Но зачем?";
-        dialogueManager.ShowMonologue(text, false);
+        dialogueManager.ShowMonologue(text, false, true);
 
-        // 5. Показываем кнопку "Закрыть"
+        // 5. Показываем кнопку "Закрыть" от самого Пазл-Менеджера
         if (closeButton != null) closeButton.gameObject.SetActive(true);
     }
 
