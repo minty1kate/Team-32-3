@@ -61,6 +61,7 @@ public class InventoryManager : MonoBehaviour
             iconDisplay.color = new Color(0, 0, 0, 0); // Прозрачная иконка
         }
     }
+
     // Метод для удаления предмета
     public void RemoveItem(Sprite icon)
     {
@@ -79,6 +80,12 @@ public class InventoryManager : MonoBehaviour
         items.Clear();
         if (inventoryPanel.activeSelf) RefreshUI();
     }
-    // Добавь это внутрь класса InventoryManager
+
+    // Возвращает копию списка всех предметов для других скриптов (плиты)
+    public List<Sprite> GetAllItems()
+    {
+        return new List<Sprite>(items);
+    }
+
     public int ItemsCount => items.Count;
 }
