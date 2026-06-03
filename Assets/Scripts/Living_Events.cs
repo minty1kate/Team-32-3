@@ -29,6 +29,15 @@ namespace DefaultNamespace
         [Header("Настройки графики (2 этап)")]
         public GameObject backgroundObject;
 
+        [Header("Настройки спрайтов и подсветки")]
+        [SerializeField] private SpriteRenderer lampRenderer; // Светильник (1 этап)
+        [SerializeField] private SpriteRenderer booksRenderer; // Книги/Шкаф (финальный этап)
+        [SerializeField] private Color darkColor = new Color(0.3f, 0.3f, 0.4f, 1f); // Цвет затемнения для светильника и картины
+
+        private Color _originalLampColor;
+        private Color _originalPaintingColor;
+        private Color _originalBooksColor;
+
         [Header("Ссылки на NPC")]
         public NPCMovement npcScript;
         public Transform exitPoint;
@@ -50,11 +59,26 @@ namespace DefaultNamespace
         private bool _canInteract = false;
         private bool _eventTriggered = false;
 
-        public static bool IsFirstStepCompleted { get; private set; } = false;
-        public static bool IsPuzzleCompleted { get; private set; } = false;
+        // Сделали изменяемыми извне, чтобы этапы переключались корректно
+        public static bool IsFirstStepCompleted { get; set; } = false;
+        public static bool IsPuzzleCompleted { get; set; } = false;
 
         void Start()
         {
+            // Сохраняем исходные цвета
+            if (lampRenderer != null) _originalLampColor = lampRenderer.color;
+            if (paintingRenderer != null) _originalPaintingColor = paintingRenderer.color;
+
+            if (booksRenderer != null)
+            {
+                _originalBooksColor = booksRenderer.color;
+                // Скрываем черный квадрат триггера книг в самом начале
+                if (currentStep == StepType.FinalStep_RunAway)
+                {
+                    booksRenderer.color = new Color(_originalBooksColor.r, _originalBooksColor.g, _originalBooksColor.b, 0f);
+                }
+            }
+
             if (audioSource != null && initialLoopingSound != null)
             {
                 audioSource.clip = initialLoopingSound;
@@ -86,21 +110,11 @@ namespace DefaultNamespace
         {
             if (_canInteract && Input.GetKeyDown(KeyCode.E))
             {
-                if (currentStep == StepType.SecondStep_Puzzle && !IsFirstStepCompleted)
-                {
-                    Debug.Log($"Нажата Е! Текущий шаг объекта: {currentStep}. Свет выключен: {IsFirstStepCompleted}");
-                    return;
-                }
-
-                if (currentStep == StepType.FinalStep_RunAway && !IsPuzzleCompleted)
-                {
-                    Debug.LogWarning("Шкаф заблокирован, потому что пазл еще не собран!");
-                    return;
-                }
+                if (currentStep == StepType.SecondStep_Puzzle && !IsFirstStepCompleted) return;
+                if (currentStep == StepType.FinalStep_RunAway && !IsPuzzleCompleted) return;
 
                 if (!_eventTriggered)
                 {
-                    Debug.Log("Все проверки пройдены successfully! Запускаю корутину.");
                     StartCoroutine(ExecuteStep());
                 }
             }
@@ -116,11 +130,6 @@ namespace DefaultNamespace
                 {
                     audioSource.PlayOneShot(firstStepSound);
                 }
-                else
-                {
-                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
-                }
-
                 _eventTriggered = true;
 
                 if (audioSource != null)
@@ -135,17 +144,10 @@ namespace DefaultNamespace
                 {
                     audioSource.PlayOneShot(firstStepSound);
                 }
-                else
-                {
-                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
-                }
 
                 if (blackOverlay != null) blackOverlay.SetActive(false);
 
-                if (npcScript != null)
-                {
-                    npcScript.StartConfused();
-                }
+                if (npcScript != null) npcScript.StartConfused();
 
                 yield return new WaitForSeconds(1f);
 
@@ -189,22 +191,12 @@ namespace DefaultNamespace
                 {
                     audioSource.PlayOneShot(finalStepSound);
                 }
-                else
-                {
-                    Debug.LogWarning("Звук не воспроизведен: проверьте AudioSource или AudioClip!");
-                }
 
-                if (backgroundObject != null)
-                {
-                    backgroundObject.SetActive(false);
-                }
+                if (backgroundObject != null) backgroundObject.SetActive(false);
 
                 yield return new WaitForSeconds(0.2f);
 
-                if (npcScript != null)
-                {
-                    npcScript.StartFeeling(exitPoint);
-                }
+                if (npcScript != null) npcScript.StartFeeling(exitPoint);
 
                 yield return new WaitForSeconds(1.5f);
 
@@ -242,6 +234,9 @@ namespace DefaultNamespace
             TogglePlayerMovement(true);
             IsFirstStepCompleted = true;
 
+            // Светильник навсегда возвращает обычный цвет и больше не подсвечивается
+            if (lampRenderer != null) lampRenderer.color = _originalLampColor;
+
             TaskManager tm = FindAnyObjectByType<TaskManager>();
             if (tm != null) tm.CompleteCurrentTask();
         }
@@ -250,7 +245,9 @@ namespace DefaultNamespace
         {
             _eventTriggered = true;
             IsPuzzleCompleted = true;
-            Debug.Log("Доступ к финальному испугу открыт!");
+
+            // Картина возвращает базовый цвет (или твой glowColor)
+            if (paintingRenderer != null) paintingRenderer.color = glowColor;
 
             if (audioSource != null && postPuzzleLoopingSound != null)
             {
@@ -260,16 +257,9 @@ namespace DefaultNamespace
                 audioSource.Play();
             }
 
-            if (paintingRenderer != null)
-            {
-                paintingRenderer.color = glowColor;
-                _ps.Play();
-            }
+            if (_ps != null) _ps.Play();
 
-            if (npcScript != null)
-            {
-                npcScript.MakeRotationFaster();
-            }
+            if (npcScript != null) npcScript.MakeRotationFaster();
 
             if (dialogueManager != null)
             {
@@ -304,8 +294,8 @@ namespace DefaultNamespace
         private void OnFinalDialogueFinished()
         {
             TogglePlayerMovement(true);
+            if (booksRenderer != null) booksRenderer.color = new Color(_originalBooksColor.r, _originalBooksColor.g, _originalBooksColor.b, 0f);
 
-            // ВОЗВРАЩЕНО: зачеркивает квест «Уронить книжки» и открывает «Проверить кухню»
             TaskManager tm = FindAnyObjectByType<TaskManager>();
             if (tm != null) tm.CompleteCurrentTask();
         }
@@ -324,11 +314,25 @@ namespace DefaultNamespace
         {
             if (other.CompareTag("Player") && !_eventTriggered)
             {
-                if (currentStep == StepType.SecondStep_Puzzle && !IsFirstStepCompleted) return;
-                if (currentStep == StepType.FinalStep_RunAway && !IsPuzzleCompleted) return;
-
-                _canInteract = true;
-                if (hintObject != null) hintObject.SetActive(true);
+                // ЖЕСТКАЯ ПРОВЕРКА: Подсветка включается ТОЛЬКО если шаг объекта совпадает с текущим этапом игры
+                if (currentStep == StepType.FirstStep_Rotate && !IsFirstStepCompleted)
+                {
+                    _canInteract = true;
+                    if (hintObject != null) hintObject.SetActive(true);
+                    if (lampRenderer != null) lampRenderer.color = darkColor;
+                }
+                else if (currentStep == StepType.SecondStep_Puzzle && IsFirstStepCompleted && !IsPuzzleCompleted)
+                {
+                    _canInteract = true;
+                    if (hintObject != null) hintObject.SetActive(true);
+                    if (paintingRenderer != null) paintingRenderer.color = darkColor;
+                }
+                else if (currentStep == StepType.FinalStep_RunAway && IsPuzzleCompleted)
+                {
+                    _canInteract = true;
+                    if (hintObject != null) hintObject.SetActive(true);
+                    if (booksRenderer != null) booksRenderer.color = new Color(0f, 0f, 0f, 0.7f); // Полупрозрачный черный триггер
+                }
             }
         }
 
@@ -338,6 +342,19 @@ namespace DefaultNamespace
             {
                 _canInteract = false;
                 if (hintObject != null) hintObject.SetActive(false);
+
+                // Возвращаем цвета обратно, только если ивент еще не завершен
+                if (!_eventTriggered)
+                {
+                    if (currentStep == StepType.FirstStep_Rotate && lampRenderer != null)
+                        lampRenderer.color = _originalLampColor;
+
+                    if (currentStep == StepType.SecondStep_Puzzle && paintingRenderer != null)
+                        paintingRenderer.color = _originalPaintingColor;
+
+                    if (currentStep == StepType.FinalStep_RunAway && booksRenderer != null)
+                        booksRenderer.color = new Color(_originalBooksColor.r, _originalBooksColor.g, _originalBooksColor.b, 0f);
+                }
             }
         }
     }
